@@ -1,6 +1,6 @@
-import datetime
 import pandas as pd
 import tkinter
+# importing internal modules
 import gui
 import update_balance_df
 
