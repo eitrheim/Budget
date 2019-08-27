@@ -5,10 +5,8 @@ import gui
 
 # read in past balances
 df = pd.read_csv('balances.csv').fillna('')
-df = df.head(32)
 # add 50 days if there is not 50
 df = gui.AddDays(df)
-print(df.tail(5))
 # show the past balances
 window = tkinter.Tk()
 window0 = gui.ShowBalances(window, df)
