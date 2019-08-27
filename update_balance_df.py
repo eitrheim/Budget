@@ -4,16 +4,16 @@ import datetime
 #########################################################################
 # add days to end of df if there is less than 50 days in the future
 #########################################################################
-def AddDays(df):
-    x = str(df.loc[len(df)-1, 'Date']).split('-')
-    x = datetime.date(int(x[0]),int(x[1]),int(x[2])) - datetime.date.today()
+def add_days(df):
+    x = str(df.loc[len(df) - 1, 'Date']).split('-')
+    x = datetime.date(int(x[0]), int(x[1]), int(x[2])) - datetime.date.today()
     if x.days < 50:
         for i in range(50):
-            n = str(df.loc[len(df)-1, 'Date']).split('-')
+            n = str(df.loc[len(df) - 1, 'Date']).split('-')
             n = datetime.date(int(n[0]), int(n[1]), int(n[2]))
             the_date = n + datetime.timedelta(days=1)
-            df.loc[len(df)] = [str(the_date), '', 0, 0, 0, df.loc[len(df)-1, 'WF'],
-                               df.loc[len(df)-1, 'Citi'], df.loc[len(df)-1, 'Uber']]
+            df.loc[len(df)] = [str(the_date), '', 0, 0, 0, df.loc[len(df) - 1, 'WF'],
+                               df.loc[len(df) - 1, 'Citi'], df.loc[len(df) - 1, 'Uber']]
 
     df.reset_index(inplace=True, drop=True)
 
@@ -23,7 +23,7 @@ def AddDays(df):
 #########################################################################
 # update balances after entering current balances
 #########################################################################
-def changebalances(df, window1):
+def update_current_balances(df, window1):
     current_date = int(df[df.Date == str(datetime.date.today())].index.values)
 
     df.loc[current_date, 'WF'] = float(window1.balances['wf'])
@@ -48,7 +48,7 @@ def changebalances(df, window1):
 #########################################################################
 # update balances after entering transactions
 #########################################################################
-def update_balances(df, window3):
+def balances_after_transactions(df, window3):
     if len(window3.transactions['transaction amount1']) > 0:
         x = window3.transactions['transaction date1'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index
@@ -64,7 +64,7 @@ def update_balances(df, window3):
     if len(window3.transactions['transaction amount2']) > 0:
         x = window3.transactions['transaction date2'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index
-        df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " +\
+        df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " + \
                                         window3.transactions['transaction entry2']
         x = float(window3.transactions['transaction amount2'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf2']
@@ -98,17 +98,17 @@ def update_balances(df, window3):
 #########################################################################
 # update balances after paying off CCs
 #########################################################################
-def paidCC(df, window5):
+def paid_off_cc(df, window5):
     if window5.transactions['citi'] == 1:
         rownum = df[df.Date == str(datetime.date.today())].index.values
-        x = -float(df.loc[(rownum), 'Citi'])
+        x = -float(df.loc[rownum, 'Citi'])
         df.loc[rownum + 1, 'WF Amount'] = x + df.loc[rownum + 1, 'WF Amount']
         df.loc[rownum + 1, 'Citi Amount'] = x + df.loc[rownum + 1, 'Citi Amount']
         df.loc[rownum + 1, 'Transaction'] = df.loc[rownum + 1, 'Transaction'] + " Pay off Citi"
 
     if window5.transactions['uber'] == 1:
         rownum = df[df.Date == str(datetime.date.today())].index.values
-        x = -float(df.loc[(rownum), 'Uber'])
+        x = -float(df.loc[rownum, 'Uber'])
         df.loc[rownum + 1, 'WF Amount'] = x + df.loc[rownum + 1, 'WF Amount']
         df.loc[rownum + 1, 'Uber Amount'] = x + df.loc[rownum + 1, 'Uber Amount']
         df.loc[rownum + 1, 'Transaction'] = df.loc[rownum + 1, 'Transaction'] + " Pay off Uber"
