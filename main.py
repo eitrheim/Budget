@@ -1,5 +1,4 @@
 import datetime
-import numpy as np
 import pandas as pd
 import tkinter
 import gui
@@ -25,7 +24,10 @@ window.mainloop()
 window = tkinter.Tk()
 window3 = gui.EnterTransactions(window)
 window.mainloop()
-df = gui.update_balances(df, window3) # TODO new transactions not coming through
+df = gui.update_balances(df, window3)
+print(df.head(5))
+print(df.tail(5))
+
 # show the new changes
 window = tkinter.Tk()
 window4 = gui.ShowBalances(window, df)
@@ -36,8 +38,11 @@ window5 = gui.PayoffCC(window)
 window.mainloop()
 df = gui.paidCC(df,window5)
 # show the new changes
+print(df.head(5))
+print(df.tail(5))
+
 window = tkinter.Tk()
 window6 = gui.ShowBalances(window, df)
 window.mainloop()
 # save the new balances
-df.to_csv(r'balances.csv', index = None, header=True)
+# df.to_csv(r'balances.csv', index = None, header=True)

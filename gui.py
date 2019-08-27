@@ -1,4 +1,3 @@
-
 import tkinter
 import datetime
 
@@ -6,7 +5,6 @@ import datetime
 #########################################################################
 # show balances for 15 days into future
 #########################################################################
-
 class ShowBalances():
 
     def __init__(self, master, df):
@@ -23,7 +21,6 @@ class ShowBalances():
         ##############################################################
         # adding the results to the results table
         ##############################################################
-        
         start_date = int(df[df.Date == str(datetime.date.today())].index.values)
         c = 0
         for x in ['Date','Transaction','WF Amount','Citi Amount','Uber Amount']:
@@ -56,7 +53,6 @@ class ShowBalances():
 #########################################################################
 # add days to end of df if there is less than 50 days in the future
 #########################################################################
-
 def AddDays(df):
     x = df.Date.iloc[-1].split('-')
     x = datetime.date(int(x[0]),int(x[1]),int(x[2])) - datetime.date.today()
@@ -66,10 +62,10 @@ def AddDays(df):
             df.loc[i+1] = [the_date, '', 0, 0, 0, 0, 0, 0]
     return df
 
+
 #########################################################################
 # update balances
 #########################################################################
-
 class EnterBalances:
     balances = {}
 
@@ -123,14 +119,16 @@ def changebalances(df,window1):
         df.loc[i,'WF'] = df.loc[i-1,'WF'] + df.loc[i,'WF Amount']
         df.loc[i,'Citi'] = df.loc[i-1,'Citi'] + df.loc[i,'Citi Amount']
         df.loc[i,'Uber'] = df.loc[i-1,'Uber'] + df.loc[i,'Uber Amount']
+
+    df = df.loc[current_date:,]
+    df.reset_index(inplace = True, drop = True)
     
     return df         
         
         
 #########################################################################
 # add transactions
-#########################################################################   
-
+#########################################################################
 class EnterTransactions:
     transactions = {}
 
@@ -152,7 +150,7 @@ class EnterTransactions:
         
         self.date_entry1 = tkinter.Entry(master, width=12, justify='center')
         self.date_entry1.grid(row=2, column=1)
-        self.date_entry1.insert(tkinter.END, datetime.date.today())       
+        self.date_entry1.insert(tkinter.END, datetime.date.today() + datetime.timedelta(days=1))
         self.transaction_entry1 = tkinter.Entry(master, justify='center')
         self.transaction_entry1.grid(row=2, column=2)
         self.amount_entry1 = tkinter.Entry(master, width=12, justify='center')
@@ -169,7 +167,7 @@ class EnterTransactions:
 
         self.date_entry2 = tkinter.Entry(master, width=12, justify='center')
         self.date_entry2.grid(row=3, column=1)
-        self.date_entry2.insert(tkinter.END, datetime.date.today())
+        self.date_entry2.insert(tkinter.END, datetime.date.today() + datetime.timedelta(days=1))
         self.transaction_entry2 = tkinter.Entry(master, justify='center')
         self.transaction_entry2.grid(row=3, column=2)
         self.amount_entry2 = tkinter.Entry(master, width=12, justify='center')
@@ -186,7 +184,7 @@ class EnterTransactions:
 
         self.date_entry3 = tkinter.Entry(master, width=12, justify='center')
         self.date_entry3.grid(row=4, column=1)
-        self.date_entry3.insert(tkinter.END, datetime.date.today())
+        self.date_entry3.insert(tkinter.END, datetime.date.today() + datetime.timedelta(days=1))
         self.transaction_entry3 = tkinter.Entry(master, justify='center')
         self.transaction_entry3.grid(row=4, column=2)
         self.amount_entry3 = tkinter.Entry(master, width=12, justify='center')
@@ -217,7 +215,7 @@ class EnterTransactions:
         self.transactions['transaction date2'] = self.date_entry2.get()
         self.transactions['transaction entry2'] = self.transaction_entry2.get()
         self.transactions['transaction amount2'] = self.amount_entry2.get()
-        self.transactions['wf2'] = self.v_wf1.get()
+        self.transactions['wf2'] = self.v_wf2.get()
         self.transactions['citi2'] = self.v_citi2.get()
         self.transactions['uber2'] = self.v_uber2.get()
                 
@@ -227,47 +225,48 @@ class EnterTransactions:
         self.transactions['wf3'] = self.v_wf3.get()
         self.transactions['citi3'] = self.v_citi3.get()
         self.transactions['uber3'] = self.v_uber3.get()            
-        self.master.destroy()  
+        self.master.destroy()
 
 def update_balances(df, window3):
     if len(window3.transactions['transaction amount1']) > 0:
         x = window3.transactions['transaction date1'].split('-')
-        rownum = df[df.Date == datetime.date(int(x[0]),int(x[1]),int(x[2]))].index
-        df.loc[rownum,'Transaction'] += " " + window3.transactions['transaction entry1']
+        rownum = df[df.Date == str(datetime.date(int(x[0]),int(x[1]),int(x[2])))].index
+        df.loc[rownum,'Transaction'] = df.loc[rownum,'Transaction'] + " " + window3.transactions['transaction entry1']
         x = float(window3.transactions['transaction amount1'])
-        df.loc[rownum,'WF Amount'] += x * window3.transactions['wf1']
-        df.loc[rownum,'Citi Amount'] += x * window3.transactions['citi1']
-        df.loc[rownum,'Uber Amount'] += x * window3.transactions['uber1']
+        df.loc[rownum,'WF Amount'] = df.loc[rownum,'WF Amount'] + x * window3.transactions['wf1']
+        df.loc[rownum,'Citi Amount'] = df.loc[rownum,'Citi Amount'] + x * window3.transactions['citi1']
+        df.loc[rownum,'Uber Amount'] = df.loc[rownum,'Uber Amount'] + x * window3.transactions['uber1']
     
     if len(window3.transactions['transaction amount2']) > 0:
         x = window3.transactions['transaction date2'].split('-')
-        rownum = df[df.Date == datetime.date(int(x[0]),int(x[1]),int(x[2]))].index
-        df.loc[rownum,'Transaction'] += " " + window3.transactions['transaction entry2']
+        rownum = df[df.Date == str(datetime.date(int(x[0]),int(x[1]),int(x[2])))].index
+        df.loc[rownum,'Transaction'] = df.loc[rownum,'Transaction'] + " " + window3.transactions['transaction entry2']
         x = float(window3.transactions['transaction amount2'])
-        df.loc[rownum,'WF Amount'] += x * window3.transactions['wf2']
-        df.loc[rownum,'Citi Amount'] += x * window3.transactions['citi2']
-        df.loc[rownum,'Uber Amount'] += x * window3.transactions['uber2']
+        df.loc[rownum,'WF Amount'] = df.loc[rownum,'WF Amount'] + x * window3.transactions['wf2']
+        df.loc[rownum,'Citi Amount'] = df.loc[rownum,'Citi Amount'] + x * window3.transactions['citi2']
+        df.loc[rownum,'Uber Amount'] = df.loc[rownum,'Uber Amount'] + x * window3.transactions['uber2']
     
     if len(window3.transactions['transaction amount3']) > 0:
         x = window3.transactions['transaction date3'].split('-')
-        rownum = df[df.Date == datetime.date(int(x[0]),int(x[1]),int(x[2]))].index
-        df.loc[rownum,'Transaction'] += " " + window3.transactions['transaction entry3']
+        rownum = df[df.Date == str(datetime.date(int(x[0]),int(x[1]),int(x[2])))].index
+        df.loc[rownum,'Transaction'] = df.loc[rownum,'Transaction'] + " " + window3.transactions['transaction entry3']
         x = float(window3.transactions['transaction amount3'])
-        df.loc[rownum,'WF Amount'] += x * window3.transactions['wf3']
-        df.loc[rownum,'Citi Amount'] += x * window3.transactions['citi3']
-        df.loc[rownum,'Uber Amount'] += x * window3.transactions['uber3']
+        df.loc[rownum,'WF Amount'] = df.loc[rownum,'WF Amount'] + x * window3.transactions['wf3']
+        df.loc[rownum,'Citi Amount'] = df.loc[rownum,'Citi Amount'] + x * window3.transactions['citi3']
+        df.loc[rownum,'Uber Amount'] = df.loc[rownum,'Uber Amount'] + x * window3.transactions['uber3']
 
-    for i in range(1,len(df)-1):
+    for i in range(2,len(df)):
         df.loc[i,'WF'] = df.loc[i-1,'WF'] + df.loc[i,'WF Amount']
         df.loc[i,'Citi'] = df.loc[i-1,'Citi'] + df.loc[i,'Citi Amount']
         df.loc[i,'Uber'] = df.loc[i-1,'Uber'] + df.loc[i,'Uber Amount']
+
+    df[['WF','Citi','Uber']] = round(df[['WF','Citi','Uber']],2)
     return df 
 
 
 #########################################################################
 # pay off uber or citi credit card
-#########################################################################       
-        
+#########################################################################
 class PayoffCC:
     transactions = {}
 
@@ -275,8 +274,7 @@ class PayoffCC:
         self.master = master
         master.geometry("200x160")
         master.title("Budgeting")
-        self.title = tkinter.Label(master, text='Select card to pay off:', font='Helvetica 9 bold')
-        self.title.pack(pady=10)       
+        tkinter.Label(master, text='Select card to pay off:', font='Helvetica 9 bold').pack(pady=10)
 
         self.v_citi = tkinter.IntVar()
         self.v_uber = tkinter.IntVar()
@@ -286,8 +284,7 @@ class PayoffCC:
         self.uber_box.pack()
 
         tkinter.Label(master, text = "").pack()
-        self.continue_button = tkinter.Button(master, text='Continue', command=self.save_and_continue)
-        self.continue_button.pack()
+        tkinter.Button(master, text='Continue', command=self.save_and_continue).pack()
         tkinter.Label(master, text = "").pack()
 
     def save_and_continue(self):
@@ -297,18 +294,18 @@ class PayoffCC:
         
 def paidCC(df, window5):
     if window5.transactions['citi'] == 1:
-        rownum = df[df.Date == datetime.date.today()].index
-        x = -float(df.loc[(rownum -1) ,'Citi'])
-        df.loc[rownum,'WF Amount'] += x
-        df.loc[rownum,'Citi Amount'] += x
-        df.loc[rownum,'Transaction'] += " Pay off Citi"
+        rownum = df[df.Date == str(datetime.date.today())].index.values
+        x = -float(df.loc[(rownum) ,'Citi'])
+        df.loc[rownum + 1,'WF Amount'] = x + df.loc[rownum + 1,'WF Amount']
+        df.loc[rownum + 1,'Citi Amount'] = x + df.loc[rownum + 1,'Citi Amount']
+        df.loc[rownum + 1,'Transaction'] = df.loc[rownum + 1,'Transaction'] + " Pay off Citi"
         
     if window5.transactions['uber'] == 1:
-        rownum = df[df.Date == datetime.date.today()].index
-        x = -float(df.loc[rownum -1 ,'Uber'])
-        df.loc[rownum,'WF Amount'] += x
-        df.loc[rownum,'Uber Amount'] += x
-        df.loc[rownum,'Transaction'] += " Pay off Uber"
+        rownum = df[df.Date == str(datetime.date.today())].index.values
+        x = -float(df.loc[(rownum) ,'Uber'])
+        df.loc[rownum + 1,'WF Amount'] = x + df.loc[rownum + 1,'WF Amount']
+        df.loc[rownum + 1,'Uber Amount'] = x + df.loc[rownum + 1,'Uber Amount']
+        df.loc[rownum + 1,'Transaction'] = df.loc[rownum + 1,'Transaction'] + " Pay off Uber"
 
     for i in range(1,len(df)):
         df.loc[i,'WF'] = df.loc[i-1,'WF'] + df.loc[i,'WF Amount']
