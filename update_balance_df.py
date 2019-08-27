@@ -1,9 +1,9 @@
 import datetime
 
 
-#########################################################################
+##############################################################################
 # add days to end of df if there is less than 50 days in the future
-#########################################################################
+##############################################################################
 def add_days(df):
     x = str(df.loc[len(df) - 1, 'Date']).split('-')
     x = datetime.date(int(x[0]), int(x[1]), int(x[2])) - datetime.date.today()
@@ -20,9 +20,9 @@ def add_days(df):
     return df
 
 
-#########################################################################
+##############################################################################
 # update balances after entering current balances
-#########################################################################
+##############################################################################
 def update_current_balances(df, window1):
     current_date = int(df[df.Date == str(datetime.date.today())].index.values)
 
@@ -45,14 +45,14 @@ def update_current_balances(df, window1):
     return df
 
 
-#########################################################################
+##############################################################################
 # update balances after entering transactions
-#########################################################################
+##############################################################################
 def balances_after_transactions(df, window3):
     if len(window3.transactions['transaction amount1']) > 0:
         x = window3.transactions['transaction date1'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index
-        df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " + \
+        df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " +\
                                         window3.transactions['transaction entry1']
         x = float(window3.transactions['transaction amount1'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf1']
@@ -79,8 +79,7 @@ def balances_after_transactions(df, window3):
         df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " + \
                                         window3.transactions['transaction entry3']
         x = float(window3.transactions['transaction amount3'])
-        df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + \
-                                      x * window3.transactions['wf3']
+        df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf3']
         df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + \
                                         x * window3.transactions['citi3']
         df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + \
@@ -95,9 +94,9 @@ def balances_after_transactions(df, window3):
     return df
 
 
-#########################################################################
+##############################################################################
 # update balances after paying off CCs
-#########################################################################
+##############################################################################
 def paid_off_cc(df, window5):
     if window5.transactions['citi'] == 1:
         rownum = df[df.Date == str(datetime.date.today())].index.values
