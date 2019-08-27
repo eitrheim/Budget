@@ -3,6 +3,24 @@ import datetime
 
 
 #########################################################################
+# add days to end of df if there is less than 50 days in the future
+#########################################################################
+def AddDays(df):
+    x = str(df.loc[len(df)-1, 'Date']).split('-')
+    x = datetime.date(int(x[0]),int(x[1]),int(x[2])) - datetime.date.today()
+    if x.days < 50:
+        for i in range(50):
+            n = str(df.loc[len(df)-1, 'Date']).split('-')
+            n = datetime.date(int(n[0]), int(n[1]), int(n[2]))
+            the_date = n + datetime.timedelta(days=1)
+            df.loc[len(df)] = [str(the_date), '', 0, 0, 0, df.loc[len(df)-1, 'WF'], df.loc[len(df)-1, 'Citi'], df.loc[len(df)-1, 'Uber']]
+
+    df.reset_index(inplace=True, drop=True)
+
+    return df
+
+
+#########################################################################
 # show balances for 15 days into future
 #########################################################################
 class ShowBalances():
@@ -48,19 +66,6 @@ class ShowBalances():
             
         run_model_button = tkinter.Button(master, text='Okay', command=master.destroy)
         run_model_button.grid(row=17, columnspan=12, pady=10)
-
-
-#########################################################################
-# add days to end of df if there is less than 50 days in the future
-#########################################################################
-def AddDays(df):
-    x = df.Date.iloc[-1].split('-')
-    x = datetime.date(int(x[0]),int(x[1]),int(x[2])) - datetime.date.today()
-    if x.days < 50:
-        for i in range(50):
-            the_date = df.Date.iloc[-1] + datetime.timedelta(days=1)
-            df.loc[i+1] = [the_date, '', 0, 0, 0, 0, 0, 0]
-    return df
 
 
 #########################################################################
