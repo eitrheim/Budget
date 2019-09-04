@@ -7,34 +7,45 @@ import datetime
 ##############################################################################
 class ShowBalances:
 
-    def __init__(self, master, df):
+    def __init__(self, master, df, isapp=True):
         self.master = master
         master.title("Budgeting")
         self.title = tkinter.Label(master, text='Account Balances', font=('helvetica 16 bold'))
         self.title.grid(row=0, columnspan=8, sticky='ew')
 
+        self.frame = tkinter.Frame(master, bg='gray95')
+        self.frame.grid(row=1, columnspan=8)
+
         c = 0
+        widths = [11, 30, 11, 11, 11, 8, 8, 8]
         for i in df.columns:
-            tkinter.Label(master, text=i, font='helvetica 14 bold').grid(row=1, column=c)
+            tkinter.Label(self.frame, text=i, font='helvetica 14', width=widths[c]).grid(row=1, column=c, pady=1, padx=1)
             c = c + 1
 
         ###################################################################
         # adding the results to the results table
         ###################################################################
         start_date = int(df[df.Date == str(datetime.date.today())].index.values)
-        c = 0
-        for x in ['Date', 'Transaction']:
-            r = 2
-            for y in range(start_date, start_date + 15):
-                tkinter.Label(master, text=df[x].iloc[y]).grid(row=r, column=c)
-                r = r + 1
-            c = c + 1
+
+        r = 2
+        for y in range(start_date, start_date + 15):
+            tkinter.Label(self.frame, background='white', width=11, text=df['Date'].iloc[y]).grid(row=r, column=0, pady=1, padx=1)
+            r = r + 1
+
+        r = 3
+        for y in range(start_date + 1, start_date + 15):
+            tkinter.Label(self.frame, background='white', width=30, text=df['Transaction'].iloc[y]).grid(row=r, column=1, pady=1, padx=1)
+            r = r + 1
+
 
         c = 2
         for x in ['WF Amount', 'Citi Amount', 'Uber Amount']:
             r = 3
             for y in range(start_date + 1, start_date + 15):
-                tkinter.Label(master, text=df[x].iloc[y]).grid(row=r, column=c)
+                if df[x].iloc[y] == 0:
+                    tkinter.Label(self.frame, background='white', width=11, text='').grid(row=r, column=c, pady=1, padx=1)
+                else:
+                    tkinter.Label(self.frame, background='white', width=11, text=df[x].iloc[y]).grid(row=r, column=c, pady=1, padx=1)
                 r = r + 1
             c = c + 1
 
@@ -42,8 +53,8 @@ class ShowBalances:
         for x in ['WF']:
             r = 2
             for y in range(start_date, start_date + 15):
-                tkinter.Label(master, text=df[x].iloc[y],
-                              background='Gray67', width=8).grid(row=r, column=c)
+                tkinter.Label(self.frame, text=df[x].iloc[y], font = 'helvetica 14 bold',
+                              background='white', width=8).grid(row=r, column=c, pady=1, padx=1)
                 r = r + 1
             c = c + 1
 
@@ -51,7 +62,7 @@ class ShowBalances:
         for x in ['Citi', 'Uber']:
             r = 2
             for y in range(start_date, start_date + 15):
-                tkinter.Label(master, text=df[x].iloc[y], width=8).grid(row=r, column=c)
+                tkinter.Label(self.frame, text=df[x].iloc[y], background='white', width=8).grid(row=r, column=c, pady=1, padx=1)
                 r = r + 1
             c = c + 1
 
@@ -244,3 +255,4 @@ class PayoffCC:
 
         #persistent notes at the bottom
         #updating cc payment
+        #ability to type in transactions into grid
