@@ -10,12 +10,12 @@ class ShowBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        self.title = tkinter.Label(master, text='Account Balances', font='bold')
-        self.title.grid(row=0, columnspan=5, sticky='ew')
+        self.title = tkinter.Label(master, text='Account Balances', font=('helvetica 16 bold'))
+        self.title.grid(row=0, columnspan=8, sticky='ew')
 
         c = 0
         for i in df.columns:
-            tkinter.Label(master, text=i, font='bold').grid(row=1, column=c)
+            tkinter.Label(master, text=i, font='helvetica 14 bold').grid(row=1, column=c)
             c = c + 1
 
         ###################################################################
@@ -23,9 +23,17 @@ class ShowBalances:
         ###################################################################
         start_date = int(df[df.Date == str(datetime.date.today())].index.values)
         c = 0
-        for x in ['Date', 'Transaction', 'WF Amount', 'Citi Amount', 'Uber Amount']:
+        for x in ['Date', 'Transaction']:
             r = 2
             for y in range(start_date, start_date + 15):
+                tkinter.Label(master, text=df[x].iloc[y]).grid(row=r, column=c)
+                r = r + 1
+            c = c + 1
+
+        c = 2
+        for x in ['WF Amount', 'Citi Amount', 'Uber Amount']:
+            r = 3
+            for y in range(start_date + 1, start_date + 15):
                 tkinter.Label(master, text=df[x].iloc[y]).grid(row=r, column=c)
                 r = r + 1
             c = c + 1
@@ -60,7 +68,7 @@ class EnterBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        self.title = tkinter.Label(master, text='Enter Account Balances', font='bold')
+        self.title = tkinter.Label(master, text='Enter Account Balances', font='helvetica 16 bold')
         self.title.grid(row=0, columnspan=5, sticky='ew')
 
         tkinter.Label(master, text="").grid(row=1, column=0, padx=10)
@@ -103,7 +111,7 @@ class EnterTransactions:
     def __init__(self, master):
         self.master = master
         master.title("Budgeting")
-        self.title = tkinter.Label(master, text='Enter Transactions', font='bold')
+        self.title = tkinter.Label(master, text='Enter Transactions', font='helvetica 16 bold')
         self.title.grid(row=0, columnspan=8, sticky='ew', pady=10)
 
         tkinter.Label(master, text="").grid(row=1, column=0, padx=10)
@@ -205,7 +213,8 @@ class PayoffCC:
     def __init__(self, master):
         self.master = master
         master.title("Budgeting")
-        tkinter.Label(master, text='Select card to pay off:', font='bold').grid(row=0, column=0, columnspan=2)
+        tkinter.Label(master, text='Select card to pay off:',
+                      font='helvetica 16 bold').grid(row=0, column=0, columnspan=2)
         tkinter.Label(master, text="").grid(row=1)
 
         self.v_citi = tkinter.IntVar()
@@ -232,3 +241,6 @@ class PayoffCC:
         self.transactions['citi date'] = self.citi_date.get()
         self.transactions['uber date'] = self.uber_date.get()
         self.master.destroy()
+
+        #persistent notes at the bottom
+        #updating cc payment

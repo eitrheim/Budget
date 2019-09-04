@@ -12,7 +12,7 @@ def add_days(df):
             n = str(df.loc[len(df) - 1, 'Date']).split('-')
             n = datetime.date(int(n[0]), int(n[1]), int(n[2]))
             the_date = n + datetime.timedelta(days=1)
-            df.loc[len(df)] = [str(the_date), '', 0, 0, 0, df.loc[len(df) - 1, 'WF'],
+            df.loc[len(df)] = [str(the_date), '', 0, -15, -25, df.loc[len(df) - 1, 'WF'],
                                df.loc[len(df) - 1, 'Citi'], df.loc[len(df) - 1, 'Uber']]
 
     df.reset_index(inplace=True, drop=True)
@@ -39,6 +39,7 @@ def update_current_balances(df, window1):
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
 
+    df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
     df = df.loc[current_date:, ]
     df.reset_index(inplace=True, drop=True)
 
@@ -52,8 +53,11 @@ def balances_after_transactions(df, window3):
     if len(window3.transactions['transaction amount1']) > 0:
         x = window3.transactions['transaction date1'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index
-        df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " +\
-                                        window3.transactions['transaction entry1']
+        if df.loc[rownum, 'Transaction'] != '':
+            df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " & " +\
+                                            window3.transactions['transaction entry1']
+        else:
+            df.loc[rownum, 'Transaction'] = window3.transactions['transaction entry1']
         x = float(window3.transactions['transaction amount1'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf1']
         df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + \
@@ -64,8 +68,11 @@ def balances_after_transactions(df, window3):
     if len(window3.transactions['transaction amount2']) > 0:
         x = window3.transactions['transaction date2'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index
-        df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " + \
-                                        window3.transactions['transaction entry2']
+        if df.loc[rownum, 'Transaction'] != '':
+            df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " & " +\
+                                            window3.transactions['transaction entry2']
+        else:
+            df.loc[rownum, 'Transaction'] = window3.transactions['transaction entry2']
         x = float(window3.transactions['transaction amount2'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf2']
         df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + \
@@ -76,8 +83,11 @@ def balances_after_transactions(df, window3):
     if len(window3.transactions['transaction amount3']) > 0:
         x = window3.transactions['transaction date3'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index
-        df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " " + \
-                                        window3.transactions['transaction entry3']
+        if df.loc[rownum, 'Transaction'] != '':
+            df.loc[rownum, 'Transaction'] = df.loc[rownum, 'Transaction'] + " & " +\
+                                            window3.transactions['transaction entry3']
+        else:
+            df.loc[rownum, 'Transaction'] = window3.transactions['transaction entry3']
         x = float(window3.transactions['transaction amount3'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf3']
         df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + \
@@ -116,4 +126,7 @@ def paid_off_cc(df, window5):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
+
+    df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
+
     return df
