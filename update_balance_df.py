@@ -9,6 +9,7 @@ import pandas as pd
 def add_days(df):
     x = str(df.loc[len(df) - 1, 'Date']).split('-')
     x = datetime.date(int(x[0]), int(x[1]), int(x[2])) - datetime.date.today()
+
     if x.days < 50:
         for i in range(50):
             n = str(df.loc[len(df) - 1, 'Date']).split('-')

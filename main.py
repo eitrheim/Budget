@@ -49,3 +49,7 @@ window.mainloop()
 # save the new balances to .csv
 ##############################################################################
 df.to_csv(r'balances.csv', index = None, header=True)
+
+# TODO persistent notes at the bottom
+# TODO updating cc payment
+# TODO ability to type in transactions into grid
