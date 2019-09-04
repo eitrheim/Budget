@@ -37,15 +37,15 @@ def update_current_balances(df, window1):
     df = df.loc[current_date:, ]
     df.reset_index(inplace=True, drop=True)
 
-    df.loc[current_date, 'WF'] = float(window1.balances['wf'])
-    df.loc[current_date, 'Citi'] = float(window1.balances['citi'])
-    df.loc[current_date, 'Uber'] = float(window1.balances['uber'])
-    df.loc[current_date, 'WF Amount'] = 0
-    df.loc[current_date, 'Citi Amount'] = 0
-    df.loc[current_date, 'Uber Amount'] = 0
-    df.loc[current_date, 'Transaction'] = ''
+    df.loc[0, 'WF'] = float(window1.balances['wf'])
+    df.loc[0, 'Citi'] = float(window1.balances['citi'])
+    df.loc[0, 'Uber'] = float(window1.balances['uber'])
+    df.loc[0, 'WF Amount'] = 0
+    df.loc[0, 'Citi Amount'] = 0
+    df.loc[0, 'Uber Amount'] = 0
+    df.loc[0, 'Transaction'] = ''
 
-    for i in range(current_date + 1, len(df)):
+    for i in range(1, len(df)):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
