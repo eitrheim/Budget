@@ -11,7 +11,7 @@ class ShowBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        self.title = tk.Label(master, text='Account Balances', font=('helvetica 16 bold'))
+        self.title = tk.Label(master, text='Account Balances', font='helvetica 16 bold')
 
         self.tree = ttk.Treeview(master, height=15)
 
@@ -25,7 +25,7 @@ class ShowBalances:
         self.tree.column("six", width=80, minwidth=50, stretch=tk.NO)
         self.tree.column("seven", width=80, minwidth=50, stretch=tk.NO)
 
-        self.tree.heading("#0",text="Date", anchor=tk.W)
+        self.tree.heading("#0", text="Date", anchor=tk.W)
         self.tree.heading("one", text="Transaction", anchor=tk.W)
         self.tree.heading("two", text="WF Amount", anchor=tk.W)
         self.tree.heading("three", text="Citi Amount", anchor=tk.W)
@@ -41,12 +41,14 @@ class ShowBalances:
             if df.Date.value_counts()[df.Date[i]] == 1:  # when there is <= one transaction for a day
                 if df.loc[i, 'Transaction'] == '':  # if there are no transactions for a day
                     self.tree.insert('', 'end', text=df.loc[i, 'Date'],
-                                     values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'], df.loc[i, 'Citi Amount'],
-                                             df.loc[i, 'Uber Amount'], df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
+                                     values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
+                                             df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
+                                             df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
                 else:  # if there is a transaction we add a tag
                     self.tree.insert('', 'end', text=df.loc[i, 'Date'], tags=('transaction',),
-                                     values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'], df.loc[i, 'Citi Amount'],
-                                             df.loc[i, 'Uber Amount'], df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
+                                     values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
+                                             df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
+                                             df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
             elif df.Date[i] != df.Date[i-1]:  # if this is the first transaction listed when there are multiple in a day
                 x = len(df[df.Date == df.Date[i]].index.values) - 1
                 # creating the folder to store the multiple transactions
@@ -61,14 +63,16 @@ class ShowBalances:
                                                                 df.loc[i+x, 'Uber']])
                 # putting first transaction in the folder
                 self.tree.insert(globals()['folder' + str(i)], 'end', text='', tags=('foldercontents',),
-                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'], df.loc[i, 'Citi Amount'],
-                                         df.loc[i, 'Uber Amount'], df.loc[i, 'WF'], df.loc[i, 'Citi'],
-                                         df.loc[i, 'Uber']])
+                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
+                                         df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
+                                         df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
             else:  # putting next transactions in the folder
                 x = df[df.Date == df.Date[i]].index.values[0]
                 self.tree.insert(globals()['folder' + str(x)], 'end', text='', tags=('foldercontents',),
-                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'], df.loc[i, 'Citi Amount'],
-                                         df.loc[i, 'Uber Amount'], df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
+                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
+                                         df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
+                                         df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
+
         ##############################################################################
         # colors and styling of table
         ##############################################################################
@@ -82,78 +86,6 @@ class ShowBalances:
         tk.Label(master, text='').pack()
         tk.Button(master, text='Okay', command=master.destroy).pack()
         tk.Label(master, text='').pack()
-
-
-##############################################################################
-# old grid way to show balances
-##############################################################################
-# class ShowBalances:
-#
-#     def __init__(self, master, df):
-#         self.master = master
-#         master.title("Budgeting")
-#         self.title = tk.Label(master, text='Account Balances', font=('helvetica 16 bold'))
-#         self.title.grid(row=0, columnspan=8, sticky='ew')
-#
-#         self.frame = tk.Frame(master, bg='gray95')
-#         self.frame.grid(row=1, columnspan=8)
-#
-#         c = 0
-#         widths = [11, 30, 11, 11, 11, 8, 8, 8]
-#         for i in df.columns:
-#             tk.Label(self.frame, text=i, font='helvetica 14', width=widths[c]).grid(row=1, column=c, pady=1, padx=1)
-#             c = c + 1
-#
-#         ###################################################################
-#         # adding the results to the results table
-#         ###################################################################
-#         start_date = int(df[df.Date == str(datetime.date.today())].index.values)
-#
-#         r = 2
-#         for y in range(start_date, start_date + 15):
-#             tk.Label(self.frame, background='white', width=11,
-#             text=df['Date'].iloc[y]).grid(row=r, column=0, pady=1, padx=1)
-#             r = r + 1
-#
-#         r = 3
-#         for y in range(start_date + 1, start_date + 15):
-#             tk.Label(self.frame, background='white', width=30,
-#             text=df['Transaction'].iloc[y]).grid(row=r, column=1, pady=1, padx=1)
-#             r = r + 1
-#
-#
-#         c = 2
-#         for x in ['WF Amount', 'Citi Amount', 'Uber Amount']:
-#             r = 3
-#             for y in range(start_date + 1, start_date + 15):
-#                 if df[x].iloc[y] == 0:
-#                     tk.Label(self.frame, background='white', width=11, text='').grid(row=r, column=c, pady=1, padx=1)
-#                 else:
-#                     tk.Label(self.frame, background='white', width=11,
-#                     text=df[x].iloc[y]).grid(row=r, column=c, pady=1, padx=1)
-#                 r = r + 1
-#             c = c + 1
-#
-#         c = 5
-#         for x in ['WF']:
-#             r = 2
-#             for y in range(start_date, start_date + 15):
-#                 tk.Label(self.frame, text=df[x].iloc[y], font = 'helvetica 14 bold',
-#                               background='white', width=8).grid(row=r, column=c, pady=1, padx=1)
-#                 r = r + 1
-#             c = c + 1
-#
-#         c = 6
-#         for x in ['Citi', 'Uber']:
-#             r = 2
-#             for y in range(start_date, start_date + 15):
-#                 tk.Label(self.frame, text=df[x].iloc[y],
-#                 background='white', width=8).grid(row=r, column=c, pady=1, padx=1)
-#                 r = r + 1
-#             c = c + 1
-#
-#         run_model_button = tk.Button(master, text='Okay', command=master.destroy)
-#         run_model_button.grid(row=17, columnspan=12, pady=10)
 
 
 ##############################################################################
@@ -187,8 +119,7 @@ class EnterBalances:
         self.uber_entry.insert(tk.END, df.loc[current_date, "Uber"])
 
         tk.Label(master, text="").grid(row=3, columnspan=3)
-        self.continue_button = tk.Button(master, text='Continue',
-                                              command=self.save_and_continue)
+        self.continue_button = tk.Button(master, text='Continue', command=self.save_and_continue)
         self.continue_button.grid(row=4, column=2, sticky='ew')
         tk.Label(master, text="").grid(row=5, columnspan=3)
 
@@ -272,8 +203,7 @@ class EnterTransactions:
         self.uber_box3.grid(row=4, column=6)
 
         tk.Label(master, text="").grid(row=5)
-        self.continue_button = tk.Button(master, text='Continue',
-                                              command=self.save_and_continue)
+        self.continue_button = tk.Button(master, text='Continue', command=self.save_and_continue)
         self.continue_button.grid(row=6, column=3)
         tk.Label(master, text="").grid(row=6)
 
@@ -310,8 +240,7 @@ class PayoffCC:
     def __init__(self, master):
         self.master = master
         master.title("Budgeting")
-        tk.Label(master, text='Select card to pay off:',
-                      font='helvetica 16 bold').grid(row=0, column=0, columnspan=2)
+        tk.Label(master, text='Select card to pay off:', font='helvetica 16 bold').grid(row=0, column=0, columnspan=2)
         tk.Label(master, text="").grid(row=1)
 
         self.v_citi = tk.IntVar()

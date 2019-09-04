@@ -41,16 +41,18 @@ window.mainloop()
 window = tk.Tk()
 window5 = gui.PayoffCC(window)
 window.mainloop()
-df = update_balance_df.paid_off_cc(df,window5)
+df = update_balance_df.paid_off_cc(df, window5)
 window = tk.Tk()
 window6 = gui.ShowBalances(window, df)
 window.mainloop()
 ##############################################################################
 # save the new balances to .csv
 ##############################################################################
-df.to_csv(r'balances.cssv', index = None, header=True)
+df.to_csv(r'balances.csv', index=None, header=True)
 
 # TODO persistent notes at the bottom
 # TODO updating cc payment
 # TODO ability to type in transactions into grid
 # TODO blank if 0
+# TODO settingwithcopywarning after entering balances
+# TODO if I press enter, it binds/commits the buttons
