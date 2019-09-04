@@ -17,8 +17,9 @@ def add_days(df):
             df.loc[len(df)] = [str(the_date), '', 0, 15, 25, df.loc[len(df) - 1, 'WF'],
                                df.loc[len(df) - 1, 'Citi'], df.loc[len(df) - 1, 'Uber']]
 
-    for i in range(1, len(df)):
-        if df.loc[i, "Transaction"] == "Pay off Citi":
+    for i in range(1, len(df.Date)):
+        print(i)
+        if df.Transaction[i] == "Pay off Citi":
             print(i)
             x = -df.loc[i-1, 'Citi']
             print(x)
@@ -29,7 +30,7 @@ def add_days(df):
             df.loc[i, 'WF Amount'] = x
             df.loc[i, 'Uber Amount'] = x
         else:
-            break
+            pass
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
@@ -66,7 +67,7 @@ def update_current_balances(df, window1):
             df.loc[i, 'WF Amount'] = x
             df.loc[i, 'Uber Amount'] = x
         else:
-            break
+            pass
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
@@ -139,7 +140,7 @@ def balances_after_transactions(df, window3):
             df.loc[i, 'WF Amount'] = x
             df.loc[i, 'Uber Amount'] = x
         else:
-            break
+            pass
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
@@ -186,7 +187,7 @@ def paid_off_cc(df, window5):
             df.loc[i, 'WF Amount'] = x
             df.loc[i, 'Uber Amount'] = x
         else:
-            break
+            pass
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
