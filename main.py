@@ -51,9 +51,9 @@ window.mainloop()
 # df.to_csv(r'balances.csv', index=None, header=True)
 
 # TODO persistent notes at the bottom
-# TODO updating cc payment
 # TODO ability to type in transactions into grid
 # TODO settingwithcopywarning after entering balances
 # TODO if I press enter, it binds/commits the buttons
 # TODO calc historical spending average per day
+# TODO delete transactions
 

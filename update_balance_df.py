@@ -18,11 +18,8 @@ def add_days(df):
                                df.loc[len(df) - 1, 'Citi'], df.loc[len(df) - 1, 'Uber']]
 
     for i in range(1, len(df.Date)):
-        print(i)
         if df.Transaction[i] == "Pay off Citi":
-            print(i)
             x = -df.loc[i-1, 'Citi']
-            print(x)
             df.loc[i, 'WF Amount'] = x
             df.loc[i, 'Citi Amount'] = x
         elif df.loc[i, "Transaction"] == "Pay off Uber":
