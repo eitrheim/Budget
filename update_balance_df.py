@@ -1,5 +1,4 @@
 import datetime
-import numpy as np
 import pandas as pd
 
 
@@ -66,17 +65,16 @@ def balances_after_transactions(df, window3):
         if df.loc[rownum, 'Transaction'] == '':
             df.loc[rownum, 'Transaction'] = window3.transactions['transaction entry1']
         else:
-            line = pd.DataFrame({"Date": 30.0, "Transaction": window3.transactions['transaction entry1']}, index=[rownum+1])
-            df = pd.concat(df.loc[:rownum], line, df.loc[rownum+1:])
+            line = pd.DataFrame({"Date": window3.transactions['transaction date1'],
+                                 "Transaction": window3.transactions['transaction entry1']}, index=[rownum + 1])
+            df = pd.concat(df.loc[:rownum], line, df.loc[rownum + 1:])
             df.reset_index(inplace=True, drop=True)
             rownum = rownum + 1
 
         x = float(window3.transactions['transaction amount1'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf1']
-        df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + \
-                                        x * window3.transactions['citi1']
-        df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + \
-                                        x * window3.transactions['uber1']
+        df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + x * window3.transactions['citi1']
+        df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + x * window3.transactions['uber1']
 
     if len(window3.transactions['transaction amount2']) > 0:
         x = window3.transactions['transaction date2'].split('-')
@@ -84,16 +82,15 @@ def balances_after_transactions(df, window3):
         if df.loc[rownum, 'Transaction'] == '':
             df.loc[rownum, 'Transaction'] = window3.transactions['transaction entry2']
         else:
-            line = pd.DataFrame({"Date": 30.0, "Transaction": window3.transactions['transaction entry2']}, index=[rownum+1])
-            df = pd.concat(df.loc[:rownum], line, df.loc[rownum+1:])
+            line = pd.DataFrame({"Date": window3.transactions['transaction date2'],
+                                 "Transaction": window3.transactions['transaction entry2']}, index=[rownum + 1])
+            df = pd.concat(df.loc[:rownum], line, df.loc[rownum + 1:])
             df.reset_index(inplace=True, drop=True)
             rownum = rownum + 1
         x = float(window3.transactions['transaction amount2'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf2']
-        df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + \
-                                        x * window3.transactions['citi2']
-        df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + \
-                                        x * window3.transactions['uber2']
+        df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + x * window3.transactions['citi2']
+        df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + x * window3.transactions['uber2']
 
     if len(window3.transactions['transaction amount3']) > 0:
         x = window3.transactions['transaction date3'].split('-')
@@ -101,16 +98,15 @@ def balances_after_transactions(df, window3):
         if df.loc[rownum, 'Transaction'] == '':
             df.loc[rownum, 'Transaction'] = window3.transactions['transaction entry3']
         else:
-            line = pd.DataFrame({"Date": 30.0, "Transaction": window3.transactions['transaction entry3']}, index=[rownum+1])
-            df = pd.concat(df.loc[:rownum], line, df.loc[rownum+1:])
+            line = pd.DataFrame({"Date": window3.transactions['transaction date3'],
+                                 "Transaction": window3.transactions['transaction entry3']}, index=[rownum + 1])
+            df = pd.concat(df.loc[:rownum], line, df.loc[rownum + 1:])
             df.reset_index(inplace=True, drop=True)
             rownum = rownum + 1
         x = float(window3.transactions['transaction amount3'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf3']
-        df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + \
-                                        x * window3.transactions['citi3']
-        df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + \
-                                        x * window3.transactions['uber3']
+        df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + x * window3.transactions['citi3']
+        df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + x * window3.transactions['uber3']
 
     for i in range(2, len(df)):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
