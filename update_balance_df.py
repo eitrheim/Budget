@@ -158,7 +158,7 @@ def paid_off_cc(df, window5):
             line = pd.DataFrame({"Date": window5.transactions['citi date'],
                                  'Transaction': 'Pay off Citi',
                                  'Uber Amount': 0}, index=[rownum + 1])
-            df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]])
+            df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
         else:
             df.loc[rownum, 'Transaction'] = 'Pay off Citi'
@@ -171,7 +171,7 @@ def paid_off_cc(df, window5):
             line = pd.DataFrame({"Date": window5.transactions['uber date'],
                                  'Transaction': 'Pay off Uber',
                                  'Citi Amount': 0}, index=[rownum + 1])
-            df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]])
+            df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
         else:
             df.loc[rownum, 'Transaction'] = 'Pay off Uber'
