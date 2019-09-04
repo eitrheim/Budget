@@ -18,6 +18,18 @@ def add_days(df):
                                df.loc[len(df) - 1, 'Citi'], df.loc[len(df) - 1, 'Uber']]
 
     for i in range(1, len(df)):
+        if df.loc[i, "Transaction"] == "Pay off Citi":
+            print(i)
+            x = -df.loc[i-1, 'Citi']
+            print(x)
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Citi Amount'] = x
+        elif df.loc[i, "Transaction"] == "Pay off Uber":
+            x = -df.loc[i-1, 'Uber']
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Uber Amount'] = x
+        else:
+            break
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
@@ -45,6 +57,16 @@ def update_current_balances(df, window1):
     df.loc[0, 'Transaction'] = ''
 
     for i in range(1, len(df)):
+        if df.loc[i, "Transaction"] == "Pay off Citi":
+            x = -df.loc[i-1, 'Citi']
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Citi Amount'] = x
+        elif df.loc[i, "Transaction"] == "Pay off Uber":
+            x = -df.loc[i-1, 'Uber']
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Uber Amount'] = x
+        else:
+            break
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
@@ -70,7 +92,6 @@ def balances_after_transactions(df, window3):
             df = pd.concat(df.loc[:rownum], line, df.loc[rownum + 1:])
             df.reset_index(inplace=True, drop=True)
             rownum = rownum + 1
-
         x = float(window3.transactions['transaction amount1'])
         df.loc[rownum, 'WF Amount'] = df.loc[rownum, 'WF Amount'] + x * window3.transactions['wf1']
         df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + x * window3.transactions['citi1']
@@ -108,7 +129,17 @@ def balances_after_transactions(df, window3):
         df.loc[rownum, 'Citi Amount'] = df.loc[rownum, 'Citi Amount'] + x * window3.transactions['citi3']
         df.loc[rownum, 'Uber Amount'] = df.loc[rownum, 'Uber Amount'] + x * window3.transactions['uber3']
 
-    for i in range(2, len(df)):
+    for i in range(1, len(df)):
+        if df.loc[i, "Transaction"] == "Pay off Citi":
+            x = -df.loc[i-1, 'Citi']
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Citi Amount'] = x
+        elif df.loc[i, "Transaction"] == "Pay off Uber":
+            x = -df.loc[i-1, 'Uber']
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Uber Amount'] = x
+        else:
+            break
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
@@ -122,20 +153,40 @@ def balances_after_transactions(df, window3):
 ##############################################################################
 def paid_off_cc(df, window5):
     if window5.transactions['citi'] == 1:
-        rownum = df[df.Date == window5.transactions['citi date']].index.values
-        x = -float(df.loc[rownum, 'Citi'])
-        df.loc[rownum + 1, 'WF Amount'] = x + df.loc[rownum + 1, 'WF Amount']
-        df.loc[rownum + 1, 'Citi Amount'] = x + df.loc[rownum + 1, 'Citi Amount']
-        df.loc[rownum + 1, 'Transaction'] = df.loc[rownum + 1, 'Transaction'] + " Pay off Citi"
+        x = window5.transactions['citi date'].split('-')
+        x = datetime.date(int(x[0]), int(x[1]), int(x[2]))
+        rownum = df[df.Date == str(x)].index.values[-1]
+        if bool(df.loc[rownum + 1, 'Transaction']):
+            line = pd.DataFrame({"Date": window5.transactions['citi date'],
+                                 'Transaction': 'Pay off Citi'}, index=[rownum + 2])
+            df = pd.concat(df.loc[:rownum + 1], line, df.loc[rownum + 2:])
+            df.reset_index(inplace=True, drop=True)
+        else:
+            df.loc[rownum + 1, 'Transaction'] = 'Pay off Citi'
 
     if window5.transactions['uber'] == 1:
-        rownum = df[df.Date == window5.transactions['uber date']].index.values
-        x = -float(df.loc[rownum, 'Uber'])
-        df.loc[rownum + 1, 'WF Amount'] = x + df.loc[rownum + 1, 'WF Amount']
-        df.loc[rownum + 1, 'Uber Amount'] = x + df.loc[rownum + 1, 'Uber Amount']
-        df.loc[rownum + 1, 'Transaction'] = df.loc[rownum + 1, 'Transaction'] + " Pay off Uber"
+        x = window5.transactions['uber date'].split('-')
+        x = datetime.date(int(x[0]), int(x[1]), int(x[2]))
+        rownum = df[df.Date == str(x)].index.values[-1]
+        if bool(df.loc[rownum + 1, 'Transaction']):
+            line = pd.DataFrame({"Date": window5.transactions['uber date'],
+                                 'Transaction': 'Pay off Uber'}, index=[rownum + 2])
+            df = pd.concat(df.loc[:rownum + 1], line, df.loc[rownum + 2:])
+            df.reset_index(inplace=True, drop=True)
+        else:
+            df.loc[rownum + 1, 'Transaction'] = 'Pay off Uber'
 
     for i in range(1, len(df)):
+        if df.loc[i, "Transaction"] == "Pay off Citi":
+            x = -float(df.loc[i-1, 'Citi'])
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Citi Amount'] = x
+        elif df.loc[i, "Transaction"] == "Pay off Uber":
+            x = -float(df.loc[i-1, 'Uber'])
+            df.loc[i, 'WF Amount'] = x
+            df.loc[i, 'Uber Amount'] = x
+        else:
+            break
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
