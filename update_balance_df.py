@@ -99,14 +99,14 @@ def balances_after_transactions(df, window3):
 ##############################################################################
 def paid_off_cc(df, window5):
     if window5.transactions['citi'] == 1:
-        rownum = df[df.Date == str(datetime.date.today())].index.values
+        rownum = df[df.Date == window5.transactions['citi date']].index.values
         x = -float(df.loc[rownum, 'Citi'])
         df.loc[rownum + 1, 'WF Amount'] = x + df.loc[rownum + 1, 'WF Amount']
         df.loc[rownum + 1, 'Citi Amount'] = x + df.loc[rownum + 1, 'Citi Amount']
         df.loc[rownum + 1, 'Transaction'] = df.loc[rownum + 1, 'Transaction'] + " Pay off Citi"
 
     if window5.transactions['uber'] == 1:
-        rownum = df[df.Date == str(datetime.date.today())].index.values
+        rownum = df[df.Date == window5.transactions['uber date']].index.values
         x = -float(df.loc[rownum, 'Uber'])
         df.loc[rownum + 1, 'WF Amount'] = x + df.loc[rownum + 1, 'WF Amount']
         df.loc[rownum + 1, 'Uber Amount'] = x + df.loc[rownum + 1, 'Uber Amount']

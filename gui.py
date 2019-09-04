@@ -10,12 +10,12 @@ class ShowBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        self.title = tkinter.Label(master, text='Account Balances', font='Helvetica 9 bold')
+        self.title = tkinter.Label(master, text='Account Balances', font='bold')
         self.title.grid(row=0, columnspan=5, sticky='ew')
 
         c = 0
         for i in df.columns:
-            tkinter.Label(master, text=i, font='Helvetica 9 bold').grid(row=1, column=c)
+            tkinter.Label(master, text=i, font='bold').grid(row=1, column=c)
             c = c + 1
 
         ###################################################################
@@ -26,7 +26,7 @@ class ShowBalances:
         for x in ['Date', 'Transaction', 'WF Amount', 'Citi Amount', 'Uber Amount']:
             r = 2
             for y in range(start_date, start_date + 15):
-                tkinter.Label(master, text=df[x].iloc[y], font='Helvetica 9').grid(row=r, column=c)
+                tkinter.Label(master, text=df[x].iloc[y]).grid(row=r, column=c)
                 r = r + 1
             c = c + 1
 
@@ -60,7 +60,7 @@ class EnterBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        self.title = tkinter.Label(master, text='Enter Account Balances', font='Helvetica 9 bold')
+        self.title = tkinter.Label(master, text='Enter Account Balances', font='bold')
         self.title.grid(row=0, columnspan=5, sticky='ew')
 
         tkinter.Label(master, text="").grid(row=1, column=0, padx=10)
@@ -71,13 +71,13 @@ class EnterBalances:
 
         current_date = int(df[df.Date == str(datetime.date.today())].index.values)
 
-        self.wf_entry = tkinter.Entry(master)
+        self.wf_entry = tkinter.Entry(master, justify='center')
         self.wf_entry.grid(row=2, column=1)
         self.wf_entry.insert(tkinter.END, df.loc[current_date, "WF"])
-        self.citi_entry = tkinter.Entry(master)
+        self.citi_entry = tkinter.Entry(master, justify='center')
         self.citi_entry.grid(row=2, column=2)
         self.citi_entry.insert(tkinter.END, df.loc[current_date, "Citi"])
-        self.uber_entry = tkinter.Entry(master)
+        self.uber_entry = tkinter.Entry(master, justify='center')
         self.uber_entry.grid(row=2, column=3)
         self.uber_entry.insert(tkinter.END, df.loc[current_date, "Uber"])
 
@@ -103,7 +103,7 @@ class EnterTransactions:
     def __init__(self, master):
         self.master = master
         master.title("Budgeting")
-        self.title = tkinter.Label(master, text='Enter Transactions', font='Helvetica 9 bold')
+        self.title = tkinter.Label(master, text='Enter Transactions', font='bold')
         self.title.grid(row=0, columnspan=8, sticky='ew', pady=10)
 
         tkinter.Label(master, text="").grid(row=1, column=0, padx=10)
@@ -204,22 +204,31 @@ class PayoffCC:
 
     def __init__(self, master):
         self.master = master
-        master.geometry("200x160")
         master.title("Budgeting")
-        tkinter.Label(master, text='Select card to pay off:', font='Helvetica 9 bold').pack(pady=10)
+        tkinter.Label(master, text='Select card to pay off:', font='bold').grid(row=0, column=0, columnspan=2)
+        tkinter.Label(master, text="").grid(row=1)
 
         self.v_citi = tkinter.IntVar()
         self.v_uber = tkinter.IntVar()
-        self.citi_box = tkinter.Checkbutton(master, text='Citi', variable=self.v_citi)
-        self.citi_box.pack()
-        self.uber_box = tkinter.Checkbutton(master, text='Uber', variable=self.v_uber)
-        self.uber_box.pack()
 
-        tkinter.Label(master, text="").pack()
-        tkinter.Button(master, text='Continue', command=self.save_and_continue).pack()
-        tkinter.Label(master, text="").pack()
+        self.citi_box = tkinter.Checkbutton(master, text='Citi', variable=self.v_citi)
+        self.citi_box.grid(column=0, row=2)
+        self.citi_date = tkinter.Entry(master, width=12, justify='center')
+        self.citi_date.insert(tkinter.END, datetime.date.today() + datetime.timedelta(days=1))
+        self.citi_date.grid(column=1, row=2)
+        self.uber_box = tkinter.Checkbutton(master, text='Uber', variable=self.v_uber)
+        self.uber_box.grid(column=0, row=3)
+        self.uber_date = tkinter.Entry(master, width=12, justify='center')
+        self.uber_date.insert(tkinter.END, datetime.date.today() + datetime.timedelta(days=1))
+        self.uber_date.grid(column=1, row=3)
+
+        tkinter.Label(master, text="").grid(row=4)
+        tkinter.Button(master, text='Continue', command=self.save_and_continue).grid(column=0, row=5, columnspan=2)
+        tkinter.Label(master, text="").grid(row=6)
 
     def save_and_continue(self):
         self.transactions['citi'] = self.v_citi.get()
         self.transactions['uber'] = self.v_uber.get()
+        self.transactions['citi date'] = self.citi_date.get()
+        self.transactions['uber date'] = self.uber_date.get()
         self.master.destroy()
