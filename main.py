@@ -57,3 +57,4 @@ window.mainloop()
 # TODO calc historical spending average per day
 # TODO delete transactions
 
+

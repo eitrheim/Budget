@@ -153,26 +153,28 @@ def paid_off_cc(df, window5):
     if window5.transactions['citi'] == 1:
         x = window5.transactions['citi date'].split('-')
         x = datetime.date(int(x[0]), int(x[1]), int(x[2]))
-        rownum = df[df.Date == str(x)].index.values[-1]
-        if bool(df.loc[rownum + 1, 'Transaction']):
+        rownum = df[df.Date == str(x)].index.values[-1].astype(int)
+        if bool(df.loc[rownum , 'Transaction']):
             line = pd.DataFrame({"Date": window5.transactions['citi date'],
-                                 'Transaction': 'Pay off Citi'}, index=[rownum + 2])
-            df = pd.concat(df.loc[:rownum + 1], line, df.loc[rownum + 2:])
+                                 'Transaction': 'Pay off Citi',
+                                 'Uber Amount': 0}, index=[rownum + 1])
+            df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]])
             df.reset_index(inplace=True, drop=True)
         else:
-            df.loc[rownum + 1, 'Transaction'] = 'Pay off Citi'
+            df.loc[rownum, 'Transaction'] = 'Pay off Citi'
 
     if window5.transactions['uber'] == 1:
         x = window5.transactions['uber date'].split('-')
         x = datetime.date(int(x[0]), int(x[1]), int(x[2]))
-        rownum = df[df.Date == str(x)].index.values[-1]
-        if bool(df.loc[rownum + 1, 'Transaction']):
+        rownum = df[df.Date == str(x)].index.values[-1].astype(int)
+        if bool(df.loc[rownum, 'Transaction']):
             line = pd.DataFrame({"Date": window5.transactions['uber date'],
-                                 'Transaction': 'Pay off Uber'}, index=[rownum + 2])
-            df = pd.concat(df.loc[:rownum + 1], line, df.loc[rownum + 2:])
+                                 'Transaction': 'Pay off Uber',
+                                 'Citi Amount': 0}, index=[rownum + 1])
+            df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]])
             df.reset_index(inplace=True, drop=True)
         else:
-            df.loc[rownum + 1, 'Transaction'] = 'Pay off Uber'
+            df.loc[rownum, 'Transaction'] = 'Pay off Uber'
 
     for i in range(1, len(df)):
         if df.loc[i, "Transaction"] == "Pay off Citi":
