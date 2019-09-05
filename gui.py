@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import datetime
+import pandas as pd
 
 
 ##############################################################################
@@ -11,8 +12,7 @@ class ShowBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        self.title = tk.Label(master, text='Account Balances', font='helvetica 16 bold')
-
+        tk.Label(master, text='Account Balances', font='helvetica 14 bold').pack(pady=2)
         self.tree = ttk.Treeview(master, height=15)
 
         self.tree["columns"] = ("one", "two", "three", "four", "five", "six", "seven")
@@ -39,19 +39,16 @@ class ShowBalances:
         ##############################################################################
         for i in range(len(df)):
             if df.Date.value_counts()[df.Date[i]] == 1:  # when there is <= one transaction for a day
+                # df.loc[i] = df.loc[i].replace(0, '')
                 if df.loc[i, 'Transaction'] == '':  # if there are no transactions for a day
                     self.tree.insert('', 'end', text=df.loc[i, 'Date'],
-                                     values=[df.loc[i, 'Transaction'],
-                                             df.loc[i, 'WF Amount'].astype(str).replace('0.0',''),
-                                             df.loc[i, 'Citi Amount'].astype(str).replace('0.0',''),
-                                             df.loc[i, 'Uber Amount'].astype(str).replace('0.0',''),
+                                     values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
+                                             df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                              df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
                 else:  # if there is a transaction we add a tag
                     self.tree.insert('', 'end', text=df.loc[i, 'Date'], tags=('transaction',),
-                                     values=[df.loc[i, 'Transaction'],
-                                             df.loc[i, 'WF Amount'].astype(str).replace('0.0',''),
-                                             df.loc[i, 'Citi Amount'].astype(str).replace('0.0',''),
-                                             df.loc[i, 'Uber Amount'].astype(str).replace('0.0',''),
+                                     values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
+                                             df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                              df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
             elif df.Date[i] != df.Date[i-1]:  # if this is the first transaction listed when there are multiple in a day
                 x = len(df[df.Date == df.Date[i]].index.values) - 1
@@ -60,36 +57,46 @@ class ShowBalances:
                                                                 tags=('folder',), open=False,
                                                                 values=[' Multiple',
                                                                 round(df.loc[i:i+x, 'WF Amount'].sum(), 2),
-                                                                round(df.loc[i:i+x, 'Citi Amount'].sum(), 2),
-                                                                round(df.loc[i:i+x, 'Uber Amount'].sum(), 2),
+                                                                round(df.loc[i:i+x, 'Citi Amount'].sum(),2),
+                                                                round(df.loc[i:i+x, 'Uber Amount'].sum(),2),
                                                                 df.loc[i+x, 'WF'],
                                                                 df.loc[i+x, 'Citi'],
                                                                 df.loc[i+x, 'Uber']])
                 # putting first transaction in the folder
+                # df.loc[i] = df.loc[i].replacce(0, '')
                 self.tree.insert(globals()['folder' + str(i)], 'end', text='', tags=('foldercontents',),
-                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'].astype(str).replace('0.0',''),
+                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                          df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
             else:  # putting next transactions in the folder
+                # df.loc[i] = df.loc[i].replace(0, '')
                 x = df[df.Date == df.Date[i]].index.values[0]
                 self.tree.insert(globals()['folder' + str(x)], 'end', text='', tags=('foldercontents',),
-                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'].astype(str).replace('0.0',''),
+                                 values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                          df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
 
         ##############################################################################
         # colors and styling of table
         ##############################################################################
-        ttk.Style().configure("Treeview", background="gray95",  # color of cells not clicked on
-                              foreground="black")  # color of font when clicked on
-        ttk.Style().configure("Treeview.Heading", font=('Helvetica bold', 14))  # (None, 12) to just change size
-        self.tree.tag_configure('transaction', background='gray87')
-        self.tree.tag_configure('folder', background='gray75')
-        self.tree.tag_configure('foldercontents', background='gray87')
+        color1 = 'lavender'  # background of folder
+        color2 = 'gray90'  # background of folder items and transactions
+        color3 = 'white'  # main background
+        color4 = 'black'  # font color
 
-        self.tree.pack(side=tk.TOP, fill=tk.X, padx=0)  # TODO somehow make it so it grows vertically, and what is fill
+        ttk.Style().configure('.',              # every class of object
+                              # relief=tk.FLAT,  # flat ridge for separator
+                              borderwidth=0)  # zero width for the border
+        ttk.Style().configure("Treeview", background=color3,  # color of cells not clicked on
+                              foreground=color4)  # color of font when clicked on
+        ttk.Style().configure("Treeview.Heading", font=('Helvetica bold', 14))  # (None, 12) to just change size
+        self.tree.tag_configure('transaction', background=color2)
+        self.tree.tag_configure('folder', background=color1)
+        self.tree.tag_configure('foldercontents', background=color2)
+
+        self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=0)
         tk.Label(master, text='', font='helvetica 2').pack()
-        self.okay_button = tk.Button(master, text='Okay', command=master.destroy)
+        self.okay_button = tk.Button(master, text='Okay', font='helvetica 14 bold', command=master.destroy)
         self.okay_button.pack(ipadx=20)
         tk.Label(master, text='', font='helvetica 2').pack()
 
