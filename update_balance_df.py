@@ -83,7 +83,7 @@ def balances_after_transactions(df, window3):
         x = window3.transactions['transaction date1'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index[-1]
         if bool(df.loc[rownum, 'Transaction']):
-            line = pd.DataFrame({"Date": window3.transactions['transaction date1'],
+            line = pd.DataFrame({"Date": df.Date.loc[rownum],
                                  "Transaction": window3.transactions['transaction entry1']}, index=[rownum + 1])
             df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
@@ -99,7 +99,7 @@ def balances_after_transactions(df, window3):
         x = window3.transactions['transaction date2'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index[-1]
         if bool(df.loc[rownum, 'Transaction']):
-            line = pd.DataFrame({"Date": window3.transactions['transaction date2'],
+            line = pd.DataFrame({"Date": df.Date.loc[rownum],
                                  "Transaction": window3.transactions['transaction entry2']}, index=[rownum + 1])
             df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
@@ -115,7 +115,7 @@ def balances_after_transactions(df, window3):
         x = window3.transactions['transaction date3'].split('-')
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index[-1]
         if bool(df.loc[rownum, 'Transaction']):
-            line = pd.DataFrame({"Date": window3.transactions['transaction date3'],
+            line = pd.DataFrame({"Date": df.Date.loc[rownum],
                                  "Transaction": window3.transactions['transaction entry3']}, index=[rownum + 1])
             df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
