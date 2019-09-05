@@ -8,6 +8,7 @@ import update_balance_df
 # read in past balances and add 0 days if there is not 50
 ##############################################################################
 df = pd.read_csv('balances.csv').fillna('')
+df.Transaction = df.Transaction.replace('0', '')
 df = update_balance_df.add_days(df)
 ##############################################################################
 # show the balances that have been read in
