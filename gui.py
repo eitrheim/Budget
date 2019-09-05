@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 import datetime
-import pandas as pd
 
 
 ##############################################################################
@@ -81,6 +80,7 @@ class ShowBalances:
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                          '', '', ''])
                 df.loc[i] = df.loc[i].replace('', 0)
+        df.Transaction = df.Transaction.replace('0', '')
 
         ##############################################################################
         # colors and styling of table

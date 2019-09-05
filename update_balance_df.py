@@ -16,7 +16,11 @@ def add_days(df):
             the_date = n + datetime.timedelta(days=1)
             df.loc[len(df)] = [str(the_date), '', 0, 15, 25, df.loc[len(df) - 1, 'WF'],
                                df.loc[len(df) - 1, 'Citi'], df.loc[len(df) - 1, 'Uber']]
+    df.reset_index(inplace=True, drop=True)
 
+    ##############################################################################
+    # update future balances
+    ##############################################################################
     for i in range(1, len(df.Date)):
         if df.Transaction[i] == "Pay off Citi":
             x = -df.loc[i-1, 'Citi']
@@ -33,7 +37,6 @@ def add_days(df):
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
 
     df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
-    df.reset_index(inplace=True, drop=True)
 
     return df
 
@@ -68,9 +71,7 @@ def update_current_balances(df, window1):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
-
     df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
-    df.reset_index(inplace=True, drop=True)
 
     return df
 
@@ -127,6 +128,9 @@ def balances_after_transactions(df, window3):
         df.loc[rownum, 'Citi Amount'] = x * window3.transactions['citi3']
         df.loc[rownum, 'Uber Amount'] = x * window3.transactions['uber3']
 
+    ##############################################################################
+    # update future balances
+    ##############################################################################
     for i in range(1, len(df)):
         if df.loc[i, "Transaction"] == "Pay off Citi":
             x = -df.loc[i-1, 'Citi']
@@ -141,8 +145,8 @@ def balances_after_transactions(df, window3):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
-
     df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
+
     return df
 
 
@@ -176,6 +180,9 @@ def paid_off_cc(df, window5):
         else:
             df.loc[rownum, 'Transaction'] = 'Pay off Uber'
 
+    ##############################################################################
+    # update future balances
+    ##############################################################################
     for i in range(1, len(df)):
         if df.loc[i, "Transaction"] == "Pay off Citi":
             x = -float(df.loc[i-1, 'Citi'])
@@ -190,7 +197,6 @@ def paid_off_cc(df, window5):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
-
     df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
 
     return df
