@@ -43,7 +43,7 @@ def add_days(df):
 ##############################################################################
 def update_current_balances(df, window1):
     current_date = df[df.Date == str(datetime.date.today())].index.values[-1].astype(int)
-    df = df.loc[current_date:, ]
+    df.drop(range(0, current_date), axis=0, inplace=True)
     df.reset_index(inplace=True, drop=True)
 
     df.loc[0, 'WF'] = float(window1.balances['wf'])

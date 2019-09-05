@@ -42,7 +42,7 @@ class ShowBalances:
         ##############################################################################
         for i in range(len(df)):
             if df.Date.value_counts()[df.Date[i]] == 1:  # when there is <= one transaction for a day
-                # df.loc[i] = df.loc[i].replace(0, '')
+                df.loc[i] = df.loc[i].replace(0, '')
                 if df.loc[i, 'Transaction'] == '':  # if there are no transactions for a day
                     self.tree.insert('', 'end', text=df.loc[i, 'Date'],
                                      values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
@@ -53,11 +53,12 @@ class ShowBalances:
                                      values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                              df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                              df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
+                df.loc[i] = df.loc[i].replace('', 0)
             elif df.Date[i] != df.Date[i-1]:  # if this is the first transaction listed when there are multiple in a day
                 x = len(df[df.Date == df.Date[i]].index.values) - 1
                 # creating the folder to store the multiple transactions
                 globals()['folder' + str(i)] = self.tree.insert('', 'end', text=df.loc[i, 'Date'],
-                                                                tags=('folder',), open=True,
+                                                                tags=('folder',), open=False,
                                                                 values=[' Multiple',
                                                                 round(df.loc[i:i+x, 'WF Amount'].sum(), 2),
                                                                 round(df.loc[i:i+x, 'Citi Amount'].sum(), 2),
@@ -66,18 +67,20 @@ class ShowBalances:
                                                                 df.loc[i+x, 'Citi'],
                                                                 df.loc[i+x, 'Uber']])
                 # putting first transaction in the folder
-                # df.loc[i] = df.loc[i].replacce(0, '')
+                df.loc[i] = df.loc[i].replace(0, '')
                 self.tree.insert(globals()['folder' + str(i)], 'end', text='', tags=('foldercontents',),
                                  values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                          '', '', ''])
+                df.loc[i] = df.loc[i].replace('', 0)
             else:  # putting next transactions in the folder
-                # df.loc[i] = df.loc[i].replace(0, '')
+                df.loc[i] = df.loc[i].replace(0, '')
                 x = df[df.Date == df.Date[i]].index.values[0]
                 self.tree.insert(globals()['folder' + str(x)], 'end', text='', tags=('foldercontents',),
                                  values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                          '', '', ''])
+                df.loc[i] = df.loc[i].replace('', 0)
 
         ##############################################################################
         # colors and styling of table
@@ -100,7 +103,7 @@ class ShowBalances:
         ##############################################################################
         self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=0)
         tk.Label(master, text='', font='helvetica 2').pack()
-        tk.Button(master, text='Okay', font='helvetica 14 bold', command=master.destroy).pack(ipadx=50, ipady=1)
+        tk.Button(master, text='Continue', font='helvetica 14 bold', command=master.destroy).pack(ipadx=50, ipady=1)
         tk.Label(master, text='', font='helvetica 2').pack()
 
 
@@ -243,8 +246,8 @@ class EnterTransactions:
         # button to continue
         ##############################################################################
         tk.Label(master, text="", font='helvetica 2').grid(row=5)
-        tk.Button(master, text='Continue', font='helvetica 14 bold',
-                  command=self.save_and_continue).grid(row=6, columnspan=7, padx=30)
+        tk.Button(master, text='        Continue        ', font='helvetica 14 bold',
+                  command=self.save_and_continue).grid(row=6, columnspan=8)
         tk.Label(master, text="", font='helvetica 2').grid(row=7)
 
         ##############################################################################
@@ -312,8 +315,8 @@ class PayoffCC:
         # button to continue
         ##############################################################################
         tk.Label(master, text="", font='helvetica 2').grid(row=5)
-        tk.Button(master, text='Continue', font='helvetica 14 bold',
-                  command=self.save_and_continue).grid(row=6, columnspan=2, padx=30)
+        tk.Button(master, text='       Continue       ', font='helvetica 14 bold',
+                  command=self.save_and_continue).grid(row=6, columnspan=2)
         tk.Label(master, text="", font='helvetica 2').grid(row=7)
 
         ##############################################################################
