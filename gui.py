@@ -12,27 +12,30 @@ class ShowBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        tk.Label(master, text='Account Balances', font='helvetica 14 bold').pack(pady=2)
+        tk.Label(master, text='Account Balances', font='None 14 bold').pack(pady=1)
         self.tree = ttk.Treeview(master, height=15)
 
+        ##############################################################################
+        # column headings
+        ##############################################################################
         self.tree["columns"] = ("one", "two", "three", "four", "five", "six", "seven")
-        self.tree.column("#0", width=100, minwidth=100, stretch=tk.NO, anchor='center')
+        self.tree.column("#0", width=100, stretch=tk.NO, anchor='center')
         self.tree.column("one", width=250, minwidth=150, anchor='center')
-        self.tree.column("two", width=80, minwidth=80, stretch=tk.NO, anchor='center')
-        self.tree.column("three", width=80, minwidth=50, stretch=tk.NO, anchor='center')
-        self.tree.column("four", width=80, minwidth=50, stretch=tk.NO, anchor='center')
-        self.tree.column("five", width=80, minwidth=50, stretch=tk.NO, anchor='center')
-        self.tree.column("six", width=80, minwidth=50, stretch=tk.NO, anchor='center')
-        self.tree.column("seven", width=80, minwidth=50, stretch=tk.NO, anchor='center')
+        self.tree.column("two", width=80, stretch=tk.NO, anchor='center')
+        self.tree.column("three", width=80, stretch=tk.NO, anchor='center')
+        self.tree.column("four", width=80, stretch=tk.NO, anchor='center')
+        self.tree.column("five", width=80, stretch=tk.NO, anchor='center')
+        self.tree.column("six", width=80, stretch=tk.NO, anchor='center')
+        self.tree.column("seven", width=80, stretch=tk.NO, anchor='center')
 
-        self.tree.heading("#0", text="Date", anchor='center')
-        self.tree.heading("one", text="Transaction", anchor='center')
-        self.tree.heading("two", text="WF Amt", anchor='center')
-        self.tree.heading("three", text="Citi Amt", anchor='center')
-        self.tree.heading("four", text="Uber Amt", anchor='center')
-        self.tree.heading("five", text="WF", anchor='center')
-        self.tree.heading("six", text="Citi", anchor='center')
-        self.tree.heading("seven", text="Uber", anchor='center')
+        self.tree.heading("#0", text="Date")
+        self.tree.heading("one", text="Transaction")
+        self.tree.heading("two", text="WF Amt")
+        self.tree.heading("three", text="Citi Amt")
+        self.tree.heading("four", text="Uber Amt")
+        self.tree.heading("five", text="WF")
+        self.tree.heading("six", text="Citi")
+        self.tree.heading("seven", text="Uber")
 
         ##############################################################################
         # filling in the table
@@ -54,11 +57,11 @@ class ShowBalances:
                 x = len(df[df.Date == df.Date[i]].index.values) - 1
                 # creating the folder to store the multiple transactions
                 globals()['folder' + str(i)] = self.tree.insert('', 'end', text=df.loc[i, 'Date'],
-                                                                tags=('folder',), open=False,
+                                                                tags=('folder',), open=True,
                                                                 values=[' Multiple',
                                                                 round(df.loc[i:i+x, 'WF Amount'].sum(), 2),
-                                                                round(df.loc[i:i+x, 'Citi Amount'].sum(),2),
-                                                                round(df.loc[i:i+x, 'Uber Amount'].sum(),2),
+                                                                round(df.loc[i:i+x, 'Citi Amount'].sum(), 2),
+                                                                round(df.loc[i:i+x, 'Uber Amount'].sum(), 2),
                                                                 df.loc[i+x, 'WF'],
                                                                 df.loc[i+x, 'Citi'],
                                                                 df.loc[i+x, 'Uber']])
@@ -67,37 +70,37 @@ class ShowBalances:
                 self.tree.insert(globals()['folder' + str(i)], 'end', text='', tags=('foldercontents',),
                                  values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
-                                         df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
+                                         '', '', ''])
             else:  # putting next transactions in the folder
                 # df.loc[i] = df.loc[i].replace(0, '')
                 x = df[df.Date == df.Date[i]].index.values[0]
                 self.tree.insert(globals()['folder' + str(x)], 'end', text='', tags=('foldercontents',),
                                  values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
-                                         df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
+                                         '', '', ''])
 
         ##############################################################################
         # colors and styling of table
         ##############################################################################
         color1 = 'lavender'  # background of folder
         color2 = 'gray90'  # background of folder items and transactions
-        color3 = 'white'  # main background
+        color3 = 'gray98'  # main background
         color4 = 'black'  # font color
 
-        ttk.Style().configure('.',              # every class of object
-                              # relief=tk.FLAT,  # flat ridge for separator
-                              borderwidth=0)  # zero width for the border
+        ttk.Style().configure('.', borderwidth=0)  # every class with zero width for the border, no ridge to show
         ttk.Style().configure("Treeview", background=color3,  # color of cells not clicked on
                               foreground=color4)  # color of font when clicked on
-        ttk.Style().configure("Treeview.Heading", font=('Helvetica bold', 14))  # (None, 12) to just change size
+        ttk.Style().configure("Treeview.Heading", font=(None, 12))
         self.tree.tag_configure('transaction', background=color2)
         self.tree.tag_configure('folder', background=color1)
         self.tree.tag_configure('foldercontents', background=color2)
 
+        ##############################################################################
+        # pack table (i.e. treeview) and add continue button
+        ##############################################################################
         self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=0)
         tk.Label(master, text='', font='helvetica 2').pack()
-        self.okay_button = tk.Button(master, text='Okay', font='helvetica 14 bold', command=master.destroy)
-        self.okay_button.pack(ipadx=20)
+        tk.Button(master, text='Okay', font='helvetica 14 bold', command=master.destroy).pack(ipadx=50, ipady=1)
         tk.Label(master, text='', font='helvetica 2').pack()
 
 
@@ -110,31 +113,52 @@ class EnterBalances:
     def __init__(self, master, df):
         self.master = master
         master.title("Budgeting")
-        self.title = tk.Label(master, text='Enter Account Balances', font='helvetica 16 bold')
-        self.title.grid(row=0, columnspan=5, sticky='ew')
+        self.title = tk.Label(master, text='Enter Account Balances', font='helvetica 14 bold')
+        self.title.grid(row=0, columnspan=5, sticky='ew', pady=1)
 
+        ##############################################################################
+        # add column headings
+        ##############################################################################
         tk.Label(master, text="").grid(row=1, column=0, padx=10)
-        tk.Label(master, text="Wells Fargo").grid(row=1, column=1, padx=10)
-        tk.Label(master, text="Citi").grid(row=1, column=2, padx=10)
-        tk.Label(master, text="Uber").grid(row=1, column=3, padx=10)
+        tk.Label(master, text="Wells Fargo", font="helvetica 14 bold").grid(row=1, column=1, padx=10)
+        tk.Label(master, text="Citi", font="helvetica 14 bold").grid(row=1, column=2, padx=10)
+        tk.Label(master, text="Uber", font="helvetica 14 bold").grid(row=1, column=3, padx=10)
         tk.Label(master, text="").grid(row=1, column=4, padx=10)
 
+        ##############################################################################
+        # entry boxes to put updated balances in, fill in with forecasted value
+        ##############################################################################
         current_date = int(df[df.Date == str(datetime.date.today())].index.values[-1])
 
         self.wf_entry = tk.Entry(master, justify='center')
-        self.wf_entry.grid(row=2, column=1)
+        self.wf_entry.grid(row=2, column=1, padx=10)
         self.wf_entry.insert(tk.END, df.loc[current_date, "WF"])
-        self.citi_entry = tk.Entry(master, justify='center')
-        self.citi_entry.grid(row=2, column=2)
-        self.citi_entry.insert(tk.END, df.loc[current_date, "Citi"])
-        self.uber_entry = tk.Entry(master, justify='center')
-        self.uber_entry.grid(row=2, column=3)
-        self.uber_entry.insert(tk.END, df.loc[current_date, "Uber"])
+        self.wf_entry.configure(highlightbackground='lavender')
 
-        tk.Label(master, text="").grid(row=3, columnspan=3)
-        self.continue_button = tk.Button(master, text='Continue', command=self.save_and_continue)
-        self.continue_button.grid(row=4, column=2, sticky='ew')
-        tk.Label(master, text="").grid(row=5, columnspan=3)
+        self.citi_entry = tk.Entry(master, justify='center')
+        self.citi_entry.grid(row=2, column=2, padx=10)
+        self.citi_entry.insert(tk.END, df.loc[current_date, "Citi"])
+        self.citi_entry.configure(highlightbackground='lavender')
+
+        self.uber_entry = tk.Entry(master, justify='center')
+        self.uber_entry.grid(row=2, column=3, padx=10)
+        self.uber_entry.insert(tk.END, df.loc[current_date, "Uber"])
+        self.uber_entry.configure(highlightbackground='lavender')
+
+        ##############################################################################
+        # button to continue
+        ##############################################################################
+        tk.Label(master, text="", font='helvetica 2').grid(row=3, columnspan=3)
+        tk.Button(master, text='Continue', font="helvetica 14 bold",
+                  command=self.save_and_continue).grid(row=4, column=2, sticky='ew')
+        tk.Label(master, text="", font='helvetica 2').grid(row=5, columnspan=3)
+
+        ##############################################################################
+        # adjusting spacing when window expands
+        ##############################################################################
+        for i in range(0, 5):
+            master.grid_rowconfigure(i, weight=1)
+            master.grid_columnconfigure(i, weight=1)
 
     def save_and_continue(self):
         self.balances['wf'] = self.wf_entry.get()
@@ -152,7 +176,7 @@ class EnterTransactions:
     def __init__(self, master):
         self.master = master
         master.title("Budgeting")
-        self.title = tk.Label(master, text='Enter Transactions', font='helvetica 16 bold')
+        self.title = tk.Label(master, text='Enter Transactions', font='helvetica 14 bold')
         self.title.grid(row=0, columnspan=8, sticky='ew', pady=10)
 
         tk.Label(master, text="").grid(row=1, column=0, padx=10)
@@ -162,7 +186,7 @@ class EnterTransactions:
         tk.Label(master, text="Wells Fargo").grid(row=1, column=4, padx=10)
         tk.Label(master, text="Citi").grid(row=1, column=5, padx=10)
         tk.Label(master, text="Uber").grid(row=1, column=6, padx=10)
-        tk.Label(master, text="").grid(row=1, column=7, padx=10)
+        tk.Label(master, text="").grid(row=1, column=7)
 
         self.date_entry1 = tk.Entry(master, width=12, justify='center')
         self.date_entry1.grid(row=2, column=1)
@@ -215,10 +239,20 @@ class EnterTransactions:
         self.uber_box3 = tk.Checkbutton(master, variable=self.v_uber3)
         self.uber_box3.grid(row=4, column=6)
 
-        tk.Label(master, text="").grid(row=5)
-        self.continue_button = tk.Button(master, text='Continue', command=self.save_and_continue)
-        self.continue_button.grid(row=6, column=3)
-        tk.Label(master, text="").grid(row=6)
+        ##############################################################################
+        # button to continue
+        ##############################################################################
+        tk.Label(master, text="", font='helvetica 2').grid(row=5)
+        tk.Button(master, text='Continue', font='helvetica 14 bold',
+                  command=self.save_and_continue).grid(row=6, columnspan=7, padx=30)
+        tk.Label(master, text="", font='helvetica 2').grid(row=7)
+
+        ##############################################################################
+        # adjusting spacing when window expands
+        ##############################################################################
+        for i in range(0, 8):
+            master.grid_rowconfigure(i, weight=1)
+            master.grid_columnconfigure(i, weight=1)
 
     def save_and_continue(self):
         self.transactions['transaction date1'] = self.date_entry1.get()
@@ -253,26 +287,42 @@ class PayoffCC:
     def __init__(self, master):
         self.master = master
         master.title("Budgeting")
-        tk.Label(master, text='Select card to pay off:', font='helvetica 16 bold').grid(row=0, column=0, columnspan=2)
-        tk.Label(master, text="").grid(row=1)
+        master.geometry("250x200")
+        tk.Label(master, text="", font='helvetica 2').grid(row=0)
+        tk.Label(master, text='Select card to pay off:', font='helvetica 14 bold').grid(row=1, column=0, columnspan=2)
+        tk.Label(master, text="",  font='helvetica 2').grid(row=2)
 
         self.v_citi = tk.IntVar()
         self.v_uber = tk.IntVar()
 
         self.citi_box = tk.Checkbutton(master, text='Citi', variable=self.v_citi)
-        self.citi_box.grid(column=0, row=2)
+        self.citi_box.grid(column=0, row=3)
         self.citi_date = tk.Entry(master, width=12, justify='center')
         self.citi_date.insert(tk.END, datetime.date.today() + datetime.timedelta(days=1))
-        self.citi_date.grid(column=1, row=2)
+        self.citi_date.grid(column=1, row=3)
+        self.citi_date.configure(highlightbackground='lavender')
         self.uber_box = tk.Checkbutton(master, text='Uber', variable=self.v_uber)
-        self.uber_box.grid(column=0, row=3)
+        self.uber_box.grid(column=0, row=4)
         self.uber_date = tk.Entry(master, width=12, justify='center')
         self.uber_date.insert(tk.END, datetime.date.today() + datetime.timedelta(days=1))
-        self.uber_date.grid(column=1, row=3)
+        self.uber_date.grid(column=1, row=4)
+        self.uber_date.configure(highlightbackground='lavender')
 
-        tk.Label(master, text="").grid(row=4)
-        tk.Button(master, text='Continue', command=self.save_and_continue).grid(column=0, row=5, columnspan=2)
-        tk.Label(master, text="").grid(row=6)
+        ##############################################################################
+        # button to continue
+        ##############################################################################
+        tk.Label(master, text="", font='helvetica 2').grid(row=5)
+        tk.Button(master, text='Continue', font='helvetica 14 bold',
+                  command=self.save_and_continue).grid(row=6, columnspan=2, padx=30)
+        tk.Label(master, text="", font='helvetica 2').grid(row=7)
+
+        ##############################################################################
+        # adjusting spacing when window expands
+        ##############################################################################
+        master.grid_columnconfigure(0, weight=1)
+        master.grid_columnconfigure(1, weight=1)
+        for i in range(0, 8):
+            master.grid_rowconfigure(i, weight=1)
 
     def save_and_continue(self):
         self.transactions['citi'] = self.v_citi.get()
