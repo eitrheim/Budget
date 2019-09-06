@@ -94,24 +94,25 @@ class ShowBalances:
 
         ttk.Style().configure('.', borderwidth=0)  # every class with zero width for the border, no ridge to show
         ttk.Style().configure("Treeview", background=color3,  # color of cells not clicked on
-                              foreground=color4)  # color of font when clicked on
-        ttk.Style().configure("Treeview.Heading", font=(None, 12))
+                              foreground=color4, font='helvetica 12')  # color of font when clicked on
+        ttk.Style().configure("Treeview.Heading", font='helvetica 12')  # (None, 12) to just change size
         self.tree.tag_configure('transaction', background=color2)
         self.tree.tag_configure('folder', background=color1)
         self.tree.tag_configure('foldercontents', background=color2)
 
         self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=0)
+        tk.Label(master, text='Notes', font='None 14 bold').pack(fill=tk.BOTH, expand=True, pady=1)
 
         ##############################################################################
         # text box for notes
         ##############################################################################
-        self.text_box = tk.Text(master, font='helvetica 12', highlightthickness=0, height=10)
+        self.text_box = tk.Text(master, font='helvetica 12', highlightthickness=0, height=10, bg=color3)
         self.text_box.config(wrap=tk.WORD)
         self.text_box.insert("end", notes)
         self.text_box.tag_add("area", "0.0", "end")
-        self.text_box.tag_config('area', justify='center')
+        self.text_box.tag_config('area', justify='center', font='helvetica 12')
         ttk.Style().configure('Text', relief='flat', borderwidth=0)
-        self.text_box.pack(fill=tk.BOTH, expand=True)
+        self.text_box.pack()
         self.text_box.focus_set()
 
         ##############################################################################
