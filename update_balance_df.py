@@ -1,6 +1,6 @@
 import datetime
 import pandas as pd
-# TODO add more sectioning
+
 
 ##############################################################################
 # add days to end of df if there is less than 50 days in the future
@@ -85,7 +85,8 @@ def balances_after_transactions(df, window3):
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index[-1]
         if bool(df.loc[rownum, 'Transaction']):
             line = pd.DataFrame({"Date": df.Date.loc[rownum],
-                                 "Transaction": window3.transactions['transaction entry1']}, index=[rownum + 1])
+                                 "Transaction": window3.transactions['transaction entry1']},
+                                index=[rownum + 1])
             df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
             rownum = rownum + 1
@@ -101,7 +102,8 @@ def balances_after_transactions(df, window3):
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index[-1]
         if bool(df.loc[rownum, 'Transaction']):
             line = pd.DataFrame({"Date": df.Date.loc[rownum],
-                                 "Transaction": window3.transactions['transaction entry2']}, index=[rownum + 1])
+                                 "Transaction": window3.transactions['transaction entry2']},
+                                index=[rownum + 1])
             df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
             rownum = rownum + 1
@@ -117,7 +119,8 @@ def balances_after_transactions(df, window3):
         rownum = df[df.Date == str(datetime.date(int(x[0]), int(x[1]), int(x[2])))].index[-1]
         if bool(df.loc[rownum, 'Transaction']):
             line = pd.DataFrame({"Date": df.Date.loc[rownum],
-                                 "Transaction": window3.transactions['transaction entry3']}, index=[rownum + 1])
+                                 "Transaction": window3.transactions['transaction entry3']},
+                                index=[rownum + 1])
             df = pd.concat([df.loc[:rownum], line, df.loc[rownum + 1:]], sort=False)
             df.reset_index(inplace=True, drop=True)
             rownum = rownum + 1

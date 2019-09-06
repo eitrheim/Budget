@@ -1,6 +1,6 @@
-import pandas as pd
 import tkinter as tk
 import re
+import pandas as pd
 # importing internal modules
 import gui
 import update_balance_df
@@ -61,8 +61,9 @@ text_file = open('notes.txt', 'w')
 text_file.write(notes)
 text_file.close()
 
-# TODO persistent notes at the bottom
 # TODO ability to type in transactions into grid
 # TODO if I press enter, it binds/commits the buttons
 # TODO calc historical spending average per day
 # TODO delete transactions
+# TODO pylint
+

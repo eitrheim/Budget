@@ -43,7 +43,7 @@ class ShowBalances:
         ##############################################################################
         df.Transaction = df.Transaction.replace('0', '')
         for i in range(len(df)):
-            if df.Date.value_counts()[df.Date[i]] == 1:  # when there is <= one transaction for a day
+            if df.Date.value_counts()[df.Date[i]] == 1:  # when there's <= 1 transaction a day
                 df.loc[i] = df.loc[i].replace(0, '')
                 if df.loc[i, 'Transaction'] == '':  # if there are no transactions for a day
                     self.tree.insert('', 'end', text=df.loc[i, 'Date'],
@@ -56,21 +56,22 @@ class ShowBalances:
                                              df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                              df.loc[i, 'WF'], df.loc[i, 'Citi'], df.loc[i, 'Uber']])
                 df.loc[i] = df.loc[i].replace('', 0)
-            elif df.Date[i] != df.Date[i-1]:  # if this is the first transaction listed when there are multiple in a day
+            elif df.Date[i] != df.Date[i-1]:  # if first trans listed when there are multiple a day
                 x = len(df[df.Date == df.Date[i]].index.values) - 1
                 # creating the folder to store the multiple transactions
                 globals()['folder' + str(i)] = self.tree.insert('', 'end', text=df.loc[i, 'Date'],
                                                                 tags=('folder',), open=False,
                                                                 values=[' Multiple',
-                                                                round(df.loc[i:i+x, 'WF Amount'].sum(), 2),
-                                                                round(df.loc[i:i+x, 'Citi Amount'].sum(), 2),
-                                                                round(df.loc[i:i+x, 'Uber Amount'].sum(), 2),
-                                                                df.loc[i+x, 'WF'],
-                                                                df.loc[i+x, 'Citi'],
-                                                                df.loc[i+x, 'Uber']])
+                                                                        round(df.loc[i:i+x, 'WF Amount'].sum(), 2),
+                                                                        round(df.loc[i:i+x, 'Citi Amount'].sum(), 2),
+                                                                        round(df.loc[i:i+x, 'Uber Amount'].sum(), 2),
+                                                                        df.loc[i+x, 'WF'],
+                                                                        df.loc[i+x, 'Citi'],
+                                                                        df.loc[i+x, 'Uber']])
                 # putting first transaction in the folder
                 df.loc[i] = df.loc[i].replace(0, '')
-                self.tree.insert(globals()['folder' + str(i)], 'end', text='', tags=('foldercontents',),
+                self.tree.insert(globals()['folder' + str(i)], 'end',
+                                 text='', tags=('foldercontents',),
                                  values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                          '', '', ''])
@@ -78,7 +79,8 @@ class ShowBalances:
             else:  # putting next transactions in the folder
                 df.loc[i] = df.loc[i].replace(0, '')
                 x = df[df.Date == df.Date[i]].index.values[0]
-                self.tree.insert(globals()['folder' + str(x)], 'end', text='', tags=('foldercontents',),
+                self.tree.insert(globals()['folder' + str(x)], 'end',
+                                 text='', tags=('foldercontents',),
                                  values=[df.loc[i, 'Transaction'], df.loc[i, 'WF Amount'],
                                          df.loc[i, 'Citi Amount'], df.loc[i, 'Uber Amount'],
                                          '', '', ''])
@@ -95,12 +97,12 @@ class ShowBalances:
 
         self.scroll = tk.Scrollbar(self.tree, command=self.tree.yview)
         self.scroll.config()
-        ttk.Style().configure('.', borderwidth=0)  # every class with zero width for the border, no ridge to show
+        ttk.Style().configure('.', borderwidth=0)  # every class to have zero width border, no ridge
         ttk.Style().configure("Treeview", background=color3,  # color of cells not clicked on
                               foreground=color4,   # color of font when clicked on
                               font='helvetica 12')
         self.tree.config(yscrollcommand=self.scroll.set)
-        ttk.Style().configure("Treeview.Heading", font='helvetica 12')  # (None, 12) to just change size
+        ttk.Style().configure("Treeview.Heading", font='helvetica 12')  # (None, 12) to change size
         self.tree.tag_configure('transaction', background=color2)
         self.tree.tag_configure('folder', background=color1)
         self.tree.tag_configure('foldercontents', background=color2)
@@ -125,7 +127,8 @@ class ShowBalances:
         # add continue button
         ##############################################################################
         tk.Label(master, text='', font='helvetica 2').pack(expand=False)
-        tk.Button(master, text='Continue', font='helvetica 14 bold', command=self.save_and_continue).pack(ipadx=50, ipady=1)
+        tk.Button(master, text='Continue', font='helvetica 14 bold',
+                  command=self.save_and_continue).pack(ipadx=50, ipady=1)
         tk.Label(master, text='', font='helvetica 2').pack(expand=False)
 
     def save_and_continue(self):
@@ -194,8 +197,8 @@ class EnterBalances:
         self.balances['citi'] = self.citi_entry.get()
         self.balances['uber'] = self.uber_entry.get()
         self.master.destroy()
-        
-        
+
+
 ##############################################################################
 # add transactions
 ##############################################################################
@@ -318,8 +321,9 @@ class PayoffCC:
         master.title("Budgeting")
         master.geometry("250x200")
         tk.Label(master, text="", font='helvetica 2').grid(row=0)
-        tk.Label(master, text='Select card to pay off:', font='helvetica 14 bold').grid(row=1, column=0, columnspan=2)
-        tk.Label(master, text="",  font='helvetica 2').grid(row=2)
+        tk.Label(master, text='Select card to pay off:',
+                 font='helvetica 14 bold').grid(row=1, column=0, columnspan=2)
+        tk.Label(master, text="", font='helvetica 2').grid(row=2)
 
         self.v_citi = tk.IntVar()
         self.v_uber = tk.IntVar()
