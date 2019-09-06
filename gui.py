@@ -11,6 +11,7 @@ class ShowBalances:
     def __init__(self, master, df, notes):
         self.master = master
         master.title("Budgeting")
+        master.geometry('840x550')
         tk.Label(master, text='Account Balances', font='None 14 bold').pack(pady=1)
         self.tree = ttk.Treeview(master, height=15)
         self.save_notes = {}
@@ -92,16 +93,21 @@ class ShowBalances:
         color3 = 'gray98'  # main background
         color4 = 'black'  # font color
 
+        self.scroll = tk.Scrollbar(self.tree, command=self.tree.yview)
+        self.scroll.config()
         ttk.Style().configure('.', borderwidth=0)  # every class with zero width for the border, no ridge to show
         ttk.Style().configure("Treeview", background=color3,  # color of cells not clicked on
-                              foreground=color4, font='helvetica 12')  # color of font when clicked on
+                              foreground=color4,   # color of font when clicked on
+                              font='helvetica 12')
+        self.tree.config(yscrollcommand=self.scroll.set)
         ttk.Style().configure("Treeview.Heading", font='helvetica 12')  # (None, 12) to just change size
         self.tree.tag_configure('transaction', background=color2)
         self.tree.tag_configure('folder', background=color1)
         self.tree.tag_configure('foldercontents', background=color2)
 
+        self.scroll.pack(side=tk.RIGHT, anchor='ne', fill=tk.Y)
         self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=0)
-        tk.Label(master, text='Notes', font='None 14 bold').pack(fill=tk.BOTH, expand=True, pady=1)
+        tk.Label(master, text='Notes', font='None 14 bold').pack(fill=tk.BOTH, expand=False, pady=1)
 
         ##############################################################################
         # text box for notes
@@ -118,9 +124,9 @@ class ShowBalances:
         ##############################################################################
         # add continue button
         ##############################################################################
-        tk.Label(master, text='', font='helvetica 2').pack()
+        tk.Label(master, text='', font='helvetica 2').pack(expand=False)
         tk.Button(master, text='Continue', font='helvetica 14 bold', command=self.save_and_continue).pack(ipadx=50, ipady=1)
-        tk.Label(master, text='', font='helvetica 2').pack()
+        tk.Label(master, text='', font='helvetica 2').pack(expand=False)
 
     def save_and_continue(self):
         self.save_notes['saved_notes'] = self.text_box.get('1.0', 'end')
