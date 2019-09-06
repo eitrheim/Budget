@@ -8,11 +8,12 @@ import datetime
 ##############################################################################
 class ShowBalances:
 
-    def __init__(self, master, df):
+    def __init__(self, master, df, notes):
         self.master = master
         master.title("Budgeting")
         tk.Label(master, text='Account Balances', font='None 14 bold').pack(pady=1)
         self.tree = ttk.Treeview(master, height=15)
+        self.save_notes = {}
 
         ##############################################################################
         # column headings
@@ -39,6 +40,7 @@ class ShowBalances:
         ##############################################################################
         # filling in the table
         ##############################################################################
+        df.Transaction = df.Transaction.replace('0', '')
         for i in range(len(df)):
             if df.Date.value_counts()[df.Date[i]] == 1:  # when there is <= one transaction for a day
                 df.loc[i] = df.loc[i].replace(0, '')
@@ -98,13 +100,30 @@ class ShowBalances:
         self.tree.tag_configure('folder', background=color1)
         self.tree.tag_configure('foldercontents', background=color2)
 
-        ##############################################################################
-        # pack table (i.e. treeview) and add continue button
-        ##############################################################################
         self.tree.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=0)
+
+        ##############################################################################
+        # text box for notes
+        ##############################################################################
+        self.text_box = tk.Text(master, font='helvetica 12', highlightthickness=0, height=10)
+        self.text_box.config(wrap=tk.WORD)
+        self.text_box.insert("end", notes)
+        self.text_box.tag_add("area", "0.0", "end")
+        self.text_box.tag_config('area', justify='center')
+        ttk.Style().configure('Text', relief='flat', borderwidth=0)
+        self.text_box.pack(fill=tk.BOTH, expand=True)
+        self.text_box.focus_set()
+
+        ##############################################################################
+        # add continue button
+        ##############################################################################
         tk.Label(master, text='', font='helvetica 2').pack()
-        tk.Button(master, text='Continue', font='helvetica 14 bold', command=master.destroy).pack(ipadx=50, ipady=1)
+        tk.Button(master, text='Continue', font='helvetica 14 bold', command=self.save_and_continue).pack(ipadx=50, ipady=1)
         tk.Label(master, text='', font='helvetica 2').pack()
+
+    def save_and_continue(self):
+        self.save_notes['saved_notes'] = self.text_box.get('1.0', 'end')
+        self.master.destroy()
 
 
 ##############################################################################
