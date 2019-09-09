@@ -24,5 +24,5 @@ Used `tkinter` GUI windows in Python that allowed me to:
 - Pay off credit cards in full
 
 <p align="center">
-<img src="images/PayOffCC.png" width="150" >
+<img src="images/PayOffCC.png" width="120" >
 </p>
