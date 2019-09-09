@@ -61,8 +61,7 @@ text_file = open('notes.txt', 'w')
 text_file.write(notes)
 text_file.close()
 
-# TODO ability to type in transactions into grid
-# TODO if I press enter, it binds/commits the buttons
+# TODO if I press enter, it binds/commits the buttons - check button list?
 # TODO calc historical spending average per day
 # TODO delete transactions
 # TODO pylint

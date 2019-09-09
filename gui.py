@@ -10,7 +10,7 @@ class ShowBalances:
 
     def __init__(self, master, df, notes):
         self.master = master
-        master.title("Budgeting")
+        master.title('Budgeting')
         master.geometry('840x550')
         tk.Label(master, text='Account Balances', font='None 14 bold').pack(pady=1)
         self.tree = ttk.Treeview(master, height=15)
@@ -19,24 +19,24 @@ class ShowBalances:
         ##############################################################################
         # column headings
         ##############################################################################
-        self.tree["columns"] = ("one", "two", "three", "four", "five", "six", "seven")
-        self.tree.column("#0", width=100, stretch=tk.NO, anchor='center')
-        self.tree.column("one", width=250, minwidth=150, anchor='center')
-        self.tree.column("two", width=80, stretch=tk.NO, anchor='center')
-        self.tree.column("three", width=80, stretch=tk.NO, anchor='center')
-        self.tree.column("four", width=80, stretch=tk.NO, anchor='center')
-        self.tree.column("five", width=80, stretch=tk.NO, anchor='center')
-        self.tree.column("six", width=80, stretch=tk.NO, anchor='center')
-        self.tree.column("seven", width=80, stretch=tk.NO, anchor='center')
+        self.tree['columns'] = ('one', 'two', 'three', 'four', 'five', 'six', 'seven')
+        self.tree.column('#0', width=100, stretch=tk.NO, anchor='center')
+        self.tree.column('one', width=250, minwidth=150, anchor='center')
+        self.tree.column('two', width=80, stretch=tk.NO, anchor='center')
+        self.tree.column('three', width=80, stretch=tk.NO, anchor='center')
+        self.tree.column('four', width=80, stretch=tk.NO, anchor='center')
+        self.tree.column('five', width=80, stretch=tk.NO, anchor='center')
+        self.tree.column('six', width=80, stretch=tk.NO, anchor='center')
+        self.tree.column('seven', width=80, stretch=tk.NO, anchor='center')
 
-        self.tree.heading("#0", text="Date")
-        self.tree.heading("one", text="Transaction")
-        self.tree.heading("two", text="WF Amt")
-        self.tree.heading("three", text="Citi Amt")
-        self.tree.heading("four", text="Uber Amt")
-        self.tree.heading("five", text="WF")
-        self.tree.heading("six", text="Citi")
-        self.tree.heading("seven", text="Uber")
+        self.tree.heading('#0', text='Date')
+        self.tree.heading('one', text='Transaction')
+        self.tree.heading('two', text='WF Amt')
+        self.tree.heading('three', text='Citi Amt')
+        self.tree.heading('four', text='Uber Amt')
+        self.tree.heading('five', text='WF')
+        self.tree.heading('six', text='Citi')
+        self.tree.heading('seven', text='Uber')
 
         ##############################################################################
         # filling in the table
@@ -88,7 +88,7 @@ class ShowBalances:
         df.Transaction = df.Transaction.replace('0', '')
 
         ##############################################################################
-        # colors and styling of table
+        # colors and styling of data table
         ##############################################################################
         color1 = 'lavender'  # background of folder
         color2 = 'gray90'  # background of folder items and transactions
@@ -98,11 +98,11 @@ class ShowBalances:
         self.scroll = tk.Scrollbar(self.tree, command=self.tree.yview)
         self.scroll.config()
         ttk.Style().configure('.', borderwidth=0)  # every class to have zero width border, no ridge
-        ttk.Style().configure("Treeview", background=color3,  # color of cells not clicked on
+        ttk.Style().configure('Treeview', background=color3,  # color of cells not clicked on
                               foreground=color4,   # color of font when clicked on
                               font='helvetica 12')
         self.tree.config(yscrollcommand=self.scroll.set)
-        ttk.Style().configure("Treeview.Heading", font='helvetica 12')  # (None, 12) to change size
+        ttk.Style().configure('Treeview.Heading', font='helvetica 12')  # (None, 12) to change size
         self.tree.tag_configure('transaction', background=color2)
         self.tree.tag_configure('folder', background=color1)
         self.tree.tag_configure('foldercontents', background=color2)
@@ -116,9 +116,10 @@ class ShowBalances:
         ##############################################################################
         self.text_box = tk.Text(master, font='helvetica 12', highlightthickness=0, height=10, bg=color3)
         self.text_box.config(wrap=tk.WORD)
-        self.text_box.insert("end", notes)
-        self.text_box.tag_add("area", "0.0", "end")
+        self.text_box.insert('end', notes, 'area')  # area is the tag name
+        # self.text_box.tag_add('area', '1.0', 'end')
         self.text_box.tag_config('area', justify='center', font='helvetica 12')
+        self.text_box.tag_config('sel', font='helvetica 12 bold')
         ttk.Style().configure('Text', relief='flat', borderwidth=0)
         self.text_box.pack()
         self.text_box.focus_set()
@@ -132,7 +133,7 @@ class ShowBalances:
         tk.Label(master, text='', font='helvetica 2').pack(expand=False)
 
     def save_and_continue(self):
-        self.save_notes['saved_notes'] = self.text_box.get('1.0', 'end')
+        self.save_notes['saved_notes'] = self.text_box.get('1.0', 'area.last')
         self.master.destroy()
 
 
@@ -144,18 +145,18 @@ class EnterBalances:
 
     def __init__(self, master, df):
         self.master = master
-        master.title("Budgeting")
+        master.title('Budgeting')
         self.title = tk.Label(master, text='Enter Account Balances', font='helvetica 14 bold')
         self.title.grid(row=0, columnspan=5, sticky='ew', pady=1)
 
         ##############################################################################
         # add column headings
         ##############################################################################
-        tk.Label(master, text="").grid(row=1, column=0, padx=10)
-        tk.Label(master, text="Wells Fargo", font="helvetica 14 bold").grid(row=1, column=1, padx=10)
-        tk.Label(master, text="Citi", font="helvetica 14 bold").grid(row=1, column=2, padx=10)
-        tk.Label(master, text="Uber", font="helvetica 14 bold").grid(row=1, column=3, padx=10)
-        tk.Label(master, text="").grid(row=1, column=4, padx=10)
+        tk.Label(master, text='').grid(row=1, column=0, padx=10)
+        tk.Label(master, text='Wells Fargo', font='helvetica 14 bold').grid(row=1, column=1, padx=10)
+        tk.Label(master, text='Citi', font='helvetica 14 bold').grid(row=1, column=2, padx=10)
+        tk.Label(master, text='Uber', font='helvetica 14 bold').grid(row=1, column=3, padx=10)
+        tk.Label(master, text='').grid(row=1, column=4, padx=10)
 
         ##############################################################################
         # entry boxes to put updated balances in, fill in with forecasted value
@@ -164,26 +165,26 @@ class EnterBalances:
 
         self.wf_entry = tk.Entry(master, justify='center')
         self.wf_entry.grid(row=2, column=1, padx=10)
-        self.wf_entry.insert(tk.END, df.loc[current_date, "WF"])
+        self.wf_entry.insert(tk.END, df.loc[current_date, 'WF'])
         self.wf_entry.configure(highlightbackground='lavender')
 
         self.citi_entry = tk.Entry(master, justify='center')
         self.citi_entry.grid(row=2, column=2, padx=10)
-        self.citi_entry.insert(tk.END, df.loc[current_date, "Citi"])
+        self.citi_entry.insert(tk.END, df.loc[current_date, 'Citi'])
         self.citi_entry.configure(highlightbackground='lavender')
 
         self.uber_entry = tk.Entry(master, justify='center')
         self.uber_entry.grid(row=2, column=3, padx=10)
-        self.uber_entry.insert(tk.END, df.loc[current_date, "Uber"])
+        self.uber_entry.insert(tk.END, df.loc[current_date, 'Uber'])
         self.uber_entry.configure(highlightbackground='lavender')
 
         ##############################################################################
         # button to continue
         ##############################################################################
-        tk.Label(master, text="", font='helvetica 2').grid(row=3, columnspan=3)
-        tk.Button(master, text='Continue', font="helvetica 14 bold",
+        tk.Label(master, text='', font='helvetica 2').grid(row=3, columnspan=3)
+        tk.Button(master, text='Continue', font='helvetica 14 bold',
                   command=self.save_and_continue).grid(row=4, column=2, sticky='ew')
-        tk.Label(master, text="", font='helvetica 2').grid(row=5, columnspan=3)
+        tk.Label(master, text='', font='helvetica 2').grid(row=5, columnspan=3)
 
         ##############################################################################
         # adjusting spacing when window expands
@@ -207,18 +208,18 @@ class EnterTransactions:
 
     def __init__(self, master):
         self.master = master
-        master.title("Budgeting")
+        master.title('Budgeting')
         self.title = tk.Label(master, text='Enter Transactions', font='helvetica 14 bold')
         self.title.grid(row=0, columnspan=8, sticky='ew', pady=10)
 
-        tk.Label(master, text="").grid(row=1, column=0, padx=10)
-        tk.Label(master, text="Date").grid(row=1, column=1, padx=10)
-        tk.Label(master, text="Transaction").grid(row=1, column=2, padx=10)
-        tk.Label(master, text="Amount").grid(row=1, column=3, padx=10)
-        tk.Label(master, text="Wells Fargo").grid(row=1, column=4, padx=10)
-        tk.Label(master, text="Citi").grid(row=1, column=5, padx=10)
-        tk.Label(master, text="Uber").grid(row=1, column=6, padx=10)
-        tk.Label(master, text="").grid(row=1, column=7)
+        tk.Label(master, text='').grid(row=1, column=0, padx=10)
+        tk.Label(master, text='Date').grid(row=1, column=1, padx=10)
+        tk.Label(master, text='Transaction').grid(row=1, column=2, padx=10)
+        tk.Label(master, text='Amount').grid(row=1, column=3, padx=10)
+        tk.Label(master, text='Wells Fargo').grid(row=1, column=4, padx=10)
+        tk.Label(master, text='Citi').grid(row=1, column=5, padx=10)
+        tk.Label(master, text='Uber').grid(row=1, column=6, padx=10)
+        tk.Label(master, text='').grid(row=1, column=7)
 
         self.date_entry1 = tk.Entry(master, width=12, justify='center')
         self.date_entry1.grid(row=2, column=1)
@@ -274,10 +275,10 @@ class EnterTransactions:
         ##############################################################################
         # button to continue
         ##############################################################################
-        tk.Label(master, text="", font='helvetica 2').grid(row=5)
+        tk.Label(master, text='', font='helvetica 2').grid(row=5)
         tk.Button(master, text='        Continue        ', font='helvetica 14 bold',
                   command=self.save_and_continue).grid(row=6, columnspan=8)
-        tk.Label(master, text="", font='helvetica 2').grid(row=7)
+        tk.Label(master, text='', font='helvetica 2').grid(row=7)
 
         ##############################################################################
         # adjusting spacing when window expands
@@ -318,12 +319,12 @@ class PayoffCC:
 
     def __init__(self, master):
         self.master = master
-        master.title("Budgeting")
-        master.geometry("250x200")
-        tk.Label(master, text="", font='helvetica 2').grid(row=0)
+        master.title('Budgeting')
+        master.geometry('250x200')
+        tk.Label(master, text='', font='helvetica 2').grid(row=0)
         tk.Label(master, text='Select card to pay off:',
                  font='helvetica 14 bold').grid(row=1, column=0, columnspan=2)
-        tk.Label(master, text="", font='helvetica 2').grid(row=2)
+        tk.Label(master, text='', font='helvetica 2').grid(row=2)
 
         self.v_citi = tk.IntVar()
         self.v_uber = tk.IntVar()
@@ -344,10 +345,10 @@ class PayoffCC:
         ##############################################################################
         # button to continue
         ##############################################################################
-        tk.Label(master, text="", font='helvetica 2').grid(row=5)
+        tk.Label(master, text='', font='helvetica 2').grid(row=5)
         tk.Button(master, text='       Continue       ', font='helvetica 14 bold',
                   command=self.save_and_continue).grid(row=6, columnspan=2)
-        tk.Label(master, text="", font='helvetica 2').grid(row=7)
+        tk.Label(master, text='', font='helvetica 2').grid(row=7)
 
         ##############################################################################
         # adjusting spacing when window expands
