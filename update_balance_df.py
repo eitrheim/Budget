@@ -36,7 +36,8 @@ def add_days(df):
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
 
-    df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
+    df[['WF Amount', 'Citi Amount', 'WF', 'Citi',
+        'Uber']] = round(df[['WF Amount', 'Citi Amount', 'WF', 'Citi', 'Uber']], 2)
 
     return df
 
@@ -71,7 +72,8 @@ def update_current_balances(df, window1):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
-    df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
+    df[['WF Amount', 'Citi Amount', 'WF', 'Citi',
+        'Uber']] = round(df[['WF Amount', 'Citi Amount', 'WF', 'Citi', 'Uber']], 2)
 
     return df
 
@@ -148,7 +150,8 @@ def balances_after_transactions(df, window3):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
-    df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
+    df[['WF Amount', 'Citi Amount', 'WF', 'Citi',
+        'Uber']] = round(df[['WF Amount', 'Citi Amount', 'WF', 'Citi', 'Uber']], 2)
 
     return df
 
@@ -200,6 +203,7 @@ def paid_off_cc(df, window5):
         df.loc[i, 'WF'] = df.loc[i - 1, 'WF'] + df.loc[i, 'WF Amount']
         df.loc[i, 'Citi'] = df.loc[i - 1, 'Citi'] + df.loc[i, 'Citi Amount']
         df.loc[i, 'Uber'] = df.loc[i - 1, 'Uber'] + df.loc[i, 'Uber Amount']
-    df[['WF', 'Citi', 'Uber']] = round(df[['WF', 'Citi', 'Uber']], 2)
+    df[['WF Amount', 'Citi Amount', 'WF', 'Citi',
+        'Uber']] = round(df[['WF Amount', 'Citi Amount', 'WF', 'Citi', 'Uber']], 2)
 
     return df
