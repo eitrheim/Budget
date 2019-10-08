@@ -65,4 +65,5 @@ text_file.close()
 # TODO calc historical spending average per day
 # TODO delete transactions
 # TODO pylint
+# TODO automatically have rent, citi, and uber paid off
 
