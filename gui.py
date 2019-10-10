@@ -60,7 +60,7 @@ class ShowBalances:
                 x = len(df[df.Date == df.Date[i]].index.values) - 1
                 # creating the folder to store the multiple transactions
                 globals()['folder' + str(i)] = self.tree.insert('', 'end', text=df.loc[i, 'Date'],
-                                                                tags=('folder',), open=False,
+                                                                tags=('folder',), open=True,
                                                                 values=[' Multiple',
                                                                         round(df.loc[i:i+x, 'WF Amount'].sum(), 2),
                                                                         round(df.loc[i:i+x, 'Citi Amount'].sum(), 2),
