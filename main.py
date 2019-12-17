@@ -45,14 +45,14 @@ notes = window4.save_notes['saved_notes']
 ###################################################################################
 # give option to pay off credit cards in full tomorrow then show new balances
 ###################################################################################
-window = tk.Tk()
-window5 = gui.PayoffCC(window)
-window.mainloop()
-df = update_balance_df.paid_off_cc(df, window5)
-window = tk.Tk()
-window6 = gui.ShowBalances(window, df, notes)
-window.mainloop()
-notes = window6.save_notes['saved_notes']
+# window = tk.Tk()
+# window5 = gui.PayoffCC(window)
+# window.mainloop()
+# df = update_balance_df.paid_off_cc(df, window5)
+# window = tk.Tk()
+# window6 = gui.ShowBalances(window, df, notes)
+# window.mainloop()
+# notes = window6.save_notes['saved_notes']
 ##############################################################################
 # save the new balances to .csv and notes to .txt
 ##############################################################################
@@ -65,5 +65,5 @@ text_file.close()
 # TODO calc historical spending average per day
 # TODO delete transactions
 # TODO pylint
-# TODO automatically have rent, citi, and uber paid off
+# TODO automatically have rent, citi, and uber entered when new dates added
 
